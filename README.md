@@ -1,20 +1,14 @@
 # dbt Labs | Fivetran | Snowflake Hands-On Lab
 
-Welcome to the dbt Labs Hands-On Lab! In this workshop, you'll transform raw data with dbt and deliver insights using Snowflake's AI capabilities.
+Welcome to the dbt Labs Hands-On Lab! In this workshop, you'll move data from a source database into Snowflake using Fivetran, transform it into trusted, production-ready data products using dbt, and see how modern data capabilities like the Fusion engine and State-Aware Orchestration make that process faster, smarter, and more efficient.
 
-This hands-on lab is a **full-stack, end-to-end walkthrough of how modern data teams go from raw data to AI-powered outcomes in Snowflake** — using dbt to build a clean, trusted semantic layer and Snowflake Cortex to power a natural language AI agent on top of it.
-
-You'll see how this architecture delivers simplicity, speed to business outcomes, and why it wins in the agentic era.
-
-We close with **what's new from dbt Labs**, including the **Fusion Engine**, **emerging patterns for dbt + Snowflake AI** (Semantics, OSI, dbt MCP Server), and **how dbt fits directly within Snowflake**.
+This is a **full-stack, end-to-end walkthrough of how modern data teams go from raw data to AI-powered outcomes** — no prior experience with any of these tools is required.
 
 ---
 
-<div style="background-color: #fff3cd; padding: 12px 16px; border-left: 6px solid #ffcc00; margin-bottom: 20px; margin-top: 10px;">
-  <strong>⚠️ IMPORTANT:</strong><br>
-  Before starting the lab, register for your Fivetran account at:<br>
-  <strong><a href="https://fivetran-lab.web.app/">https://fivetran-lab.web.app/</a></strong>
-</div>
+**⚠️ IMPORTANT:**
+Before starting the lab, register for your Fivetran account at:
+**https://fivetran-lab.web.app/**
 
 ---
 
@@ -25,21 +19,32 @@ We close with **what's new from dbt Labs**, including the **Fusion Engine**, **e
 
 ## Getting Started
 
-1. Register at [https://fivetran-lab.web.app/](https://fivetran-lab.web.app/)
+1. Register at https://fivetran-lab.web.app/
 2. Check your email for your Fivetran invitation from `notifications@fivetran.com`
 3. Accept the invitation and set your password
-4. Get lab credentials: [https://fivetran-lab.web.app/lab-credentials.html](https://fivetran-lab.web.app/lab-credentials.html) (passcode provided by instructor)
+4. Get lab credentials: https://fivetran-lab.web.app/lab-credentials.html (passcode provided by instructor)
 5. Log in to Fivetran and get ready to build!
+
+---
+
+# Part 1: Introduction to Fivetran
+
+## What is Fivetran?
+
+**Fivetran** is a data movement platform that automatically syncs data from source systems — databases, applications, cloud services — into your data warehouse. Instead of writing and maintaining custom ingestion scripts, Fivetran handles the pipeline for you: it connects to the source, extracts the data, and loads it into Snowflake on a schedule. Once set up, it runs automatically without any manual intervention.
+
+Think of Fivetran as the on-ramp to your data platform — it gets raw data flowing into Snowflake so that tools like dbt can transform it into something useful.
 
 ---
 
 ## Step 1: Create Fivetran Connector to Snowflake
 
 ### 1.1 Configure PostgreSQL Source Connector
+
 1. In Fivetran, click **+ Connector**
 2. Search for and select **Google Cloud PostgreSQL**
 3. Configure the connector:
-   - **Destination**: `Snowflake_SKO_HOL_27_dbt` (pre-configured)
+   - **Destination**: `Snowflake_Summit_HOL_dbt` (pre-configured)
    - **Snowflake Destination Virtual Warehouse**: Keep default
    - **Destination schema prefix**: `yourfirstname_yourlastname` (lowercase, underscores only)
    - **Destination schema names**: Fivetran naming
@@ -54,602 +59,386 @@ We close with **what's new from dbt Labs**, including the **Fusion Engine**, **e
 4. Click **Save & Test**
 
 ### 1.2 Select Data to Sync
+
 1. The `higher_education` schema and `hed_records` table will be pre-selected
 2. Click **Continue**
 
 ### 1.3 Handle Schema Changes
+
 1. Select **Allow all** (default)
 2. Click **Continue**
 
 ### 1.4 Start Initial Sync
+
 1. On the connector Status page, click **Start Initial Sync**
 
 ### 1.5 Verify Data in Snowflake (While Sync Runs)
+
 1. Navigate to Snowflake Lab Account using credentials from lab credentials page
 2. Log in with provided credentials
 3. In Snowflake UI, click **Catalog** in the left navigation
 4. Click on **RAW** database
-6. Find your schema (e.g., `yourfirstname_yourlastname_higher_education`)
-7. Click **Tables**
-8. Click on **HED_RECORDS** table
-9. Click **Data Preview** tab to view the Fivetran synced data and scroll all the way to the right to see `_fivetran_synced`
+5. Find your schema (e.g., `yourfirstname_yourlastname_higher_education`)
+6. Click **Tables**
+7. Click on **HED\_RECORDS** table
+8. Click **Data Preview** tab to view the Fivetran synced data and scroll all the way to the right to see `_fivetran_synced`
+
+> **✅ Expected:** You should see rows of student records loaded by Fivetran. The `_fivetran_synced` column shows the timestamp of the last sync — Fivetran automatically adds this to every table it manages.
+
+---
+
+# Part 2: Introduction to dbt
+
+## What is dbt?
+
+**dbt** (data build tool) is a transformation framework that lets data teams write modular SQL models, test them, and document them — all in one place. dbt runs *inside* your data warehouse (Snowflake), so no data ever leaves the platform. Think of it as version-controlled, tested, production-grade SQL.
+
+Where Fivetran handles *moving* raw data into Snowflake, dbt handles *transforming* that raw data into clean, trusted data products that analysts, dashboards, and AI tools can rely on.
+
+**What makes dbt different from just writing SQL?**
+- Every model is a reusable, testable building block
+- Data quality tests run automatically alongside your transformations
+- Lineage is tracked from source to output — you always know where data came from
+- Documentation is generated automatically and stays in sync with the code
+- Changes go through version control (Git), just like application software
 
 ---
 
 ## Step 2: Transform Data with dbt
 
-> **What is dbt?** dbt (data build tool) is a transformation framework that lets data teams write modular SQL models, test them, and document them — all in one place. dbt runs inside your data warehouse (Snowflake), so no data ever leaves the platform. Think of it as version-controlled, tested, production-grade SQL.
-
 ### 2.1 Register for dbt Cloud Workshop Account
 
-1. Navigate to the dbt Workshop registration page: [https://workshops.us1.dbt.com/workshop/](https://workshops.us1.dbt.com/workshop/)
+1. Navigate to the dbt Workshop registration page: https://workshops.us1.dbt.com/workshop/
 2. Fill in the registration form:
    - **First Name**: Your first name
    - **Last Name**: Your last name
    - **Company Email**: Your email address
-   - **Workshop Selection**: Select **Snowflake SKO27 Hands-On Lab** from the dropdown
+   - **Workshop Selection**: Select **Snowflake Summit Hands-On Lab** from the dropdown
    - **Workshop Passcode**: Enter the passcode provided by your instructor
 3. Click **Complete Registration** and wait for the success pop-up. It will include generated dbt Platform credentials for the workshop.
-4. Please record these credentials for the remainder of the workshop — you may need them to log into dbt Platform.
-5. Click **Complete Registration** — if you are redirected to a login page, use the automatically generated credentials above for access.
+4. Record these credentials — you may need them to log back in during the lab.
 
 ### 2.2 Access dbt Platform
 
 1. In dbt Platform, locate the **Project dropdown** on the left-hand side
-2. Select **Snowflake SKO (Higher Education)** from the dropdown
+2. Select **Snowflake Summit (Higher Education)** from the dropdown
 3. Click **Studio** to load dbt Platform
 
-### 2.3 Explore dbt Packages Configuration
+### 2.3 Build Faster with Fusion
 
-1. In the **Project Navigator** (left sidebar), locate and open the `packages.yml` file
-2. Review the file contents and note how the `snowflake_semantic_view` package is defined
-   - This package enables dbt to create Snowflake Semantic Views
-3. For detailed information on this package and how it works, see: [https://hub.getdbt.com/Snowflake-Labs/dbt_semantic_view/latest/](https://hub.getdbt.com/Snowflake-Labs/dbt_semantic_view/latest/)
+> **What is Fusion?** Fusion is dbt's next-generation execution engine, built directly into dbt Platform Studio. Unlike a traditional SQL editor, Fusion understands the structure of your entire dbt project as you type — it knows which models exist, which columns they contain, and how they relate to each other. This means it can surface errors, preview intermediate results, and provide column-level context *before* you ever run a job.
 
-**Understanding Package Management:**
-- When adding new packages, run `dbt deps` to install dependencies
-- This command creates or updates `package-lock.yml`, which records specific package versions
-- The lock file prevents compatibility issues when collaborating with other users
+This is a great place to get oriented in the dbt Platform Studio IDE before we start building. You'll explore the project structure and see how Fusion makes working in dbt faster and safer than writing SQL in a traditional editor.
 
-### 2.4 Examine and Run dbt Models
+#### 2.3.1 Explore IntelliSense
 
-1. In the **Project Navigator**, expand the `models` folder
-2. Expand the `HED` subfolder (contains all Higher Education models)
-3. Open the `hed_at_risk_students.sql` file
-4. Review the code:
-   - This file contains the code to generate a Snowflake Semantic View
-   - Note how the syntax looks identical to executing it directly in Snowflake
-5. Click the **Run +model (Upstream)** button for this model to build the semantic view and its upstream dependencies in your local Dev schema
-6. Wait for the model to complete successfully
+The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in action. It calculates a composite data quality score for student records by combining multiple upstream checks — making it easy to trace exactly where each component of the score comes from.
 
-### 2.5 Generate Tests with dbt Co-Pilot
+1. In the **Project Navigator**, open `vw_hed_data_quality.sql`
+2. In the editor, hover over any column reference used in the composite score calculation — Fusion displays the column's data type and description inline, pulled directly from the upstream model that defines it
+3. Click on a `ref()` call referencing an upstream model — Fusion lets you trace lineage directly, showing you which model and column the data flows from
+4. Begin typing a column name in the editor — notice how Fusion suggests only valid column names from the models referenced in this file, preventing typos before they become errors
 
-1. In the **Project Navigator**, locate and open `vw_hed_retention_risk_analysis.sql`
-   - This is an upstream dependency of the Semantic View
-2. Click the **Co-Pilot dropdown** in the editor
-3. Select **Generate Generic Test** from the dropdown menu
-4. Wait for Co-Pilot to process and generate the associated YAML configuration
-5. Review the generated test definitions
+> **Note:** This is IntelliSense — the same kind of intelligent code completion used in modern software development tools, now applied to your dbt SQL. Instead of guessing column names or jumping between files, Fusion surfaces the full context of your data model as you write.
 
-### 2.6 Save and Commit Changes
+#### 2.3.2 See Real-Time Error Detection
+
+1. In `vw_hed_data_quality.sql`, find any line that references an upstream model using `ref()`
+2. Temporarily change the model name to something invalid — add a typo, such as changing `ref('stg_hed_records')` to `ref('stg_hed_recordz')`
+3. Observe how Fusion immediately highlights the invalid reference with an error indicator — **without running the model**
+4. Revert the change back to the correct model name
+
+> **Note:** In a traditional SQL workflow, this error would only surface after a full job run — potentially minutes later, and after consuming warehouse compute. Fusion catches it instantly at the editor level.
+
+#### 2.3.3 Preview a CTE
+
+1. Still in `vw_hed_data_quality.sql`, locate one of the CTEs (the `WITH` blocks at the top of the file)
+2. Click on the CTE name to place your cursor inside it
+3. Click the **Preview** button in the editor toolbar
+4. Review the intermediate output of that CTE — you're seeing the partial results of one component of the composite data quality score, without running the full model
+
+> **✅ Expected:** A preview table appears showing the rows produced by that CTE. This is especially useful in a model like `vw_hed_data_quality` where multiple upstream checks feed into a single composite score — you can validate each component independently before running the full build.
+
+### 2.4 Generate Tests with dbt Co-Pilot
+
+Co-Pilot is dbt's AI assistant, powered by a dbt-native agent that understands your project structure, your models, and how dbt works. You'll use it here to automatically generate and run data quality tests for the `vw_hed_data_quality` model.
+
+1. In the **Project Navigator**, locate and open `vw_hed_data_quality.sql`
+2. Open the **Co-Pilot** panel in dbt Platform Studio
+3. In the Co-Pilot prompt, type a request such as:
+   > *"Generate data quality tests for the vw_hed_data_quality model"*
+4. Review the tests Co-Pilot proposes — it will suggest appropriate checks (e.g., `not_null`, `unique`, `accepted_values`) based on the columns and their types in the model
+5. Ask Co-Pilot to write the tests directly to a file by following up with:
+   > *"Write these tests to the schema YAML file for this model"*
+6. Co-Pilot will create or update the relevant `.yml` file with the test definitions — review the file in the **Project Navigator** to confirm the tests were added correctly
+7. Ask Co-Pilot to run the new tests:
+   > *"Run the tests for this model"*
+
+> **Note:** Notice that Co-Pilot runs `dbt test` rather than `dbt build`. The dbt agent powering Co-Pilot understands the difference — `dbt build` would rebuild the model *and* run tests, consuming unnecessary warehouse compute. Since the model already exists and we only want to validate it, `dbt test` is the correct and more efficient command. Co-Pilot makes this call automatically.
+
+> **✅ Expected:** All generated tests pass, confirming the data in `vw_hed_data_quality` meets the quality rules Co-Pilot defined. Any failures would surface specific rows or columns that don't meet the expected constraints.
+
+### 2.5 Save and Commit Changes
 
 1. Locate the **Git Integration button** in the top-left corner of dbt Platform
 2. Click the **Git Integration button** to commit and sync your changes
 3. Follow the prompts to commit your work
 4. Click to open a pull request in GitHub
-5. Review the PR (no need to merge — lab changes won't be merged)
+5. Review the PR (no need to merge — lab changes won't be merged into the main branch)
 
-**Note:** This step saves your work and demonstrates the git workflow, but we won't be merging changes during the lab.
+**Note:** This step demonstrates the git workflow built into dbt Platform. In a real production environment, all model changes go through a PR review process before being promoted — the same engineering discipline used in software development.
 
-### 2.7 Run a Production dbt Job
+### 2.6 Explore dbt Packages Configuration
+
+1. In the **Project Navigator** (left sidebar), locate and open the `packages.yml` file
+2. Review the file contents and note how the `snowflake_semantic_view` package is defined
+   - This package enables dbt to create Snowflake Semantic Views
+3. For more on this package, see: https://hub.getdbt.com/Snowflake-Labs/dbt_semantic_view/latest/
+
+**Understanding Package Management:**
+
+- When adding new packages, run `dbt deps` to install dependencies
+- This command creates or updates `package-lock.yml`, which records specific package versions
+- The lock file prevents compatibility issues when collaborating with other users
+
+### 2.7 Examine and Run dbt Models
+
+This project showcases two complementary approaches to defining semantic meaning on top of your data — both supported natively by dbt.
+
+**Approach 1: Snowflake Semantic Views**
+The `sv_hed_at_risk_students.sql` model creates a Snowflake Semantic View — a native Snowflake object that adds a business-friendly layer directly inside Snowflake. It labels columns, defines metrics (called "facts"), and categorizes attributes (called "dimensions"). This is what powers Cortex AI's ability to understand and query your student retention data using natural language later in the lab.
+
+**Approach 2: dbt Semantic Layer**
+dbt also has its own semantic and metric layer, defined using YAML-based metric files within the project. Open `sem_vw_hed_engagement_analytics.yml` in the **Project Navigator** to see an example — this file defines structured metrics on top of the HED engagement data (things like engagement rates, login activity, and risk distributions) using dbt's MetricFlow framework.
+
+The key difference: Snowflake Semantic Views live inside Snowflake and are consumed by Snowflake-native tools like Cortex Analyst. dbt Semantic Layer metrics are defined and governed within dbt itself, making them accessible to any downstream tool that connects via the **dbt MCP server** — including AI agents, BI tools, and coding assistants like Claude. When a tool connects to the dbt MCP server, it can query these metrics directly using natural language or structured requests, with dbt handling the SQL generation and ensuring metric definitions stay consistent across every consumer — including Snowflake Cortex Agents, other AI agents, BI tools, and coding assistants like Claude.
+
+1. In the **Project Navigator**, expand the `models` folder
+2. Expand the `HED` subfolder, then expand the `semantic_models` subfolder inside it
+3. Open `sv_hed_at_risk_students.sql` and review the Snowflake Semantic View definition
+4. Open `sem_vw_hed_engagement_analytics.yml` and review the dbt metric definitions alongside it — note how the two approaches complement each other within the same project
+5. Select `sv_hed_at_risk_students.sql` and click the **Run +model (Upstream)** button to build the semantic view and its upstream dependencies in your local Dev schema
+6. Wait for the model to complete successfully
+
+> **✅ Expected:** You should see a green success status for `sv_hed_at_risk_students` and its upstream model `vw_hed_retention_risk_analysis`.
+
+### 2.8 Run a Production dbt Job
 
 1. In the left-hand menu, navigate to **Orchestration > Jobs**
 2. Locate and select the preconfigured **Prod Job** (running in the **Prod Environment**)
 3. Click **Settings** in the top right, then click **Edit**
-4. Update the **Execution commands**:
-   - Find the command that says `dbt build`
-   - Change it to: `dbt build --select source:hed+`
-   - This will only build models downstream of the Higher Education data source
+4. Confirm the execution command is set to `dbt build`
 5. Ensure **Generate docs on run** is checked
 6. Click **Save** in the top right to save your changes
+7. Navigate back to the **Job Overview** page using the top navigation
+8. Click **Run Now** to execute the job
+9. Wait for the job to complete successfully
 
-### 2.8 Execute the Production Job
-
-1. Navigate back to the **Job Overview** page using the top navigation
-2. Click the **Run Now** button to execute the job
-3. Wait for the job to complete
-
----
-
-## Step 3: Build and Activate a Snowflake Cortex Agent
-
-Now that dbt has created a clean semantic layer in Snowflake, you'll build an AI agent on top of it. This section walks you through every step of creating the agent from scratch.
-
-### What is Snowflake Cortex?
-
-**Snowflake Cortex** is Snowflake's suite of built-in AI and ML capabilities. It runs entirely inside Snowflake — no data leaves the platform, no external APIs are needed. Key components we'll use today:
-
-- **Cortex Analyst**: Lets users ask natural language questions about their data. You point it at a Semantic View and it automatically translates questions like *"Which students have critical retention risk?"* into SQL and returns results.
-- **Cortex Agents**: Orchestration layer that combines Cortex Analyst with custom functions, giving the AI the ability to both answer questions *and* take actions (like routing an alert).
-- **Snowflake Intelligence**: A hosted chat interface at [ai.snowflake.com](https://ai.snowflake.com) where end users can interact with Cortex Agents without writing any code.
-
-### What is a Semantic View?
-
-A **Semantic View** is a special Snowflake object that sits on top of your regular data tables or views. It adds a business-friendly layer of meaning — labeling columns, adding descriptions, defining metrics (called "facts"), and categorizing attributes (called "dimensions"). Cortex Analyst reads the Semantic View to understand your data and translate natural language questions into accurate SQL.
-
-Think of it as giving the AI a map of your data: what every column means, what values are valid, and what filters make sense.
-
-### What is Snowflake Snowsight?
-
-**Snowsight** is Snowflake's modern web-based UI. It's where you run SQL, manage objects, and — as of recent releases — create and manage AI Agents. You'll access it using the Snowflake account URL and credentials provided on your lab credentials page.
+> **✅ Expected:** All HED models build successfully, including `vw_hed_retention_risk_analysis` and `sv_hed_at_risk_students`. You'll see green checkmarks next to each model in the run logs.
 
 ---
 
-### 3.1 Access Snowflake Snowsight
+### 2.9 State-Aware Orchestration
 
-1. Navigate to the Snowflake lab account URL from your lab credentials page
-2. Log in using the username and password provided
-3. You will land on the Snowsight home screen
+> **What is State-Aware Orchestration?** By default, every time a dbt job runs it rebuilds *every* model from scratch — even if the underlying source data hasn't changed. State-Aware Orchestration (SAO) changes this behavior. dbt compares the current state of your source data against the last known state, and skips rebuilding any model whose inputs haven't changed. This means you only pay for warehouse compute on models that actually need to run — and your jobs complete faster.
 
----
+#### 2.9.1 Enable Fusion Cost Optimization Features
 
-### 3.2 Verify Your Data is Ready
+1. Navigate to **Orchestration > Jobs** and open the **Prod Job**
+2. Click **Settings**, then **Edit**
+3. Locate the **Enable Fusion cost optimization features** toggle and turn it **ON**
+4. Confirm both sub-options are enabled:
+   - ✅ **State-aware orchestration** — dbt will skip models whose inputs haven't changed since the last run
+   - ✅ **Efficient testing** — dbt will skip tests on models that were skipped, avoiding unnecessary test compute
+5. Under **Advanced Settings**, locate the **Compare Changes** setting and set it to **Environment**
+6. In the environment dropdown that appears, select your **Production** environment (the environment you used in Step 2.8) — this tells dbt to compare the current run against the last successful production run when determining what to skip
+7. Click **Save**
 
-Before building the agent, confirm that the dbt production job from Step 1 successfully created the required views in Snowflake.
+#### 2.9.2 What Happens on Run #1
 
-1. In Snowsight, click **Projects** in the left navigation, then click **Worksheets**
-2. Click the **+** button in the top right to create a new SQL worksheet
-3. Run the following queries one at a time, replacing `YOUR_DATABASE` with the database name from your lab credentials:
+This is the first execution with Fusion cost optimization enabled. Because there is no previous production run state to compare against yet, dbt has no baseline — it treats everything as new and builds all models from scratch.
 
-**Check the base view exists and has data:**
-```sql
-SELECT COUNT(*) FROM YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.VW_HED_RETENTION_RISK_ANALYSIS;
-```
+**What you'll see:** All models execute with `CREATE` or `OK` status in the run logs. This is your **baseline run** — dbt records the current state of your data so it can make smart skip decisions on every subsequent run.
 
-**Check at-risk students exist:**
-```sql
-SELECT COUNT(*)
-FROM YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.VW_HED_RETENTION_RISK_ANALYSIS
-WHERE AT_RISK_FLAG = 'TRUE';
-```
+#### 2.9.3 Execute Run #1
 
-**Grab a sample student ID for testing later:**
-```sql
-SELECT STUDENT_ID, OVERALL_RISK_ASSESSMENT, CURRENT_GPA
-FROM YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.VW_HED_RETENTION_RISK_ANALYSIS
-WHERE AT_RISK_FLAG = 'TRUE'
-LIMIT 1;
-```
+1. Navigate to the **Prod Job Overview** page
+2. Click **Run Now**
+3. Watch the run logs as the job executes — all models should build
+4. Note the total run time displayed when the job completes
 
-> **✅ Expected:** All queries should return results. Copy the `STUDENT_ID` value from the last query — you'll use it to test the agent later.
+> **✅ Expected:** All models execute successfully. Note the run time — you'll compare this to Run #2.
 
----
+#### 2.9.4 What Happens on Run #2
 
-### 3.3 Create the Semantic View
+No new data has been loaded since Run #1 — the Fivetran sync has not run again, so `hed_records` is unchanged.
 
-The Semantic View is the "brain" that teaches Cortex Analyst what your data means. The dbt `hed_at_risk_students` model you ran in Step 1 already creates this object, but here you'll see exactly what it contains and verify it exists.
+When you trigger the job a second time, dbt compares the current state of the source data against the baseline recorded in Run #1. Because nothing has changed, dbt determines there is nothing new to build and **skips every downstream model**. With efficient testing also enabled, tests on skipped models are skipped too — no unnecessary warehouse compute is used at all.
 
-1. In your Snowsight worksheet, run the following to verify the semantic view was created:
+**What you'll see:** All models show `SKIP` status in the run logs. The job completes in seconds rather than minutes.
 
-```sql
-SHOW SEMANTIC VIEWS LIKE 'HED_AT_RISK_STUDENTS' IN SCHEMA YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION;
-```
+#### 2.9.5 Execute Run #2
 
-> **✅ Expected:** You should see one row for `HED_AT_RISK_STUDENTS`.
+1. Click **Run Now** again on the **Prod Job Overview** page
+2. Watch the run logs carefully — compare what you see to Run #1
 
-2. If the semantic view is **not** present, you can create it manually by running the full DDL below. Replace `YOUR_DATABASE` with your actual database name before running:
+> **✅ Expected:** All models are skipped. The total run time should be a fraction of Run #1's time, and zero Snowflake compute is consumed on model execution or testing.
 
-```sql
-CREATE OR REPLACE SEMANTIC VIEW YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.HED_AT_RISK_STUDENTS
-	TABLES (
-		AT_RISK_STUDENTS AS YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.VW_HED_RETENTION_RISK_ANALYSIS UNIQUE (STUDENT_ID) COMMENT='View of students flagged as at-risk based on multiple retention indicators including GPA, course completion, engagement scores, login activity, and academic standing. Data flows from PostgreSQL through this Snowflake view via dbt transformations.'
-	)
-	FACTS (
-		AT_RISK_STUDENTS.ASSIGNMENT_SUBMISSIONS AS ASSIGNMENT_SUBMISSIONS COMMENT='Number of assignments submitted',
-		AT_RISK_STUDENTS.COURSE_COMPLETION_RATE AS COURSE_COMPLETION_RATE COMMENT='Percentage of courses completed (0.0-1.0 decimal). Multiply by 100 for percentage.',
-		AT_RISK_STUDENTS.CURRENT_GPA AS CURRENT_GPA COMMENT='Current cumulative GPA on 4.0 scale. Below 2.0 is critical threshold.',
-		AT_RISK_STUDENTS.DAYS_SINCE_LAST_LOGIN AS DAYS_SINCE_LAST_LOGIN COMMENT='Days elapsed since last LMS login. 21+ days is critical threshold.',
-		AT_RISK_STUDENTS.DISCUSSION_POSTS AS DISCUSSION_POSTS COMMENT='Number of discussion forum posts',
-		AT_RISK_STUDENTS.ENGAGEMENT_SCORE AS ENGAGEMENT_SCORE COMMENT='Composite engagement metric on 0-100 scale. Higher is better.',
-		AT_RISK_STUDENTS.FINANCIAL_AID_AMOUNT AS FINANCIAL_AID_AMOUNT COMMENT='Total financial aid received in USD',
-		AT_RISK_STUDENTS.INTERVENTION_COUNT AS INTERVENTION_COUNT COMMENT='Number of academic interventions received',
-		AT_RISK_STUDENTS.PLAGIARISM_INCIDENTS AS PLAGIARISM_INCIDENTS COMMENT='Number of academic integrity violations',
-		AT_RISK_STUDENTS.TOTAL_COURSE_VIEWS AS TOTAL_COURSE_VIEWS COMMENT='Total number of course material views',
-		AT_RISK_STUDENTS.WRITING_QUALITY_SCORE AS WRITING_QUALITY_SCORE COMMENT='Writing assessment score (0-100 scale)'
-	)
-	DIMENSIONS (
-		AT_RISK_STUDENTS.ACADEMIC_STANDING AS ACADEMIC_STANDING COMMENT='Current academic status. Critical values include Probation, Warning, and Suspension.',
-		AT_RISK_STUDENTS.ADVISOR_ID AS ADVISOR_ID COMMENT='Assigned academic advisor identifier',
-		AT_RISK_STUDENTS.AT_RISK_FLAG AS AT_RISK_FLAG COMMENT='Boolean indicating if student is flagged as at-risk (always TRUE in this view)',
-		AT_RISK_STUDENTS.COMPLETION_RISK_LEVEL AS COMPLETION_RISK_LEVEL COMMENT='Risk categorization based on course completion rate',
-		AT_RISK_STUDENTS.ENGAGEMENT_RISK_LEVEL AS ENGAGEMENT_RISK_LEVEL COMMENT='Risk categorization based on engagement score',
-		AT_RISK_STUDENTS.ENROLLMENT_DATE AS ENROLLMENT_DATE COMMENT='Student enrollment date',
-		AT_RISK_STUDENTS.GPA_RISK_LEVEL AS GPA_RISK_LEVEL COMMENT='Risk categorization based on GPA (Critical/High/Moderate/Low)',
-		AT_RISK_STUDENTS.LAST_LOGIN_DATE AS LAST_LOGIN_DATE COMMENT='Most recent LMS login timestamp',
-		AT_RISK_STUDENTS.LAST_UPDATED AS LAST_UPDATED COMMENT='Timestamp of last data sync',
-		AT_RISK_STUDENTS.LOGIN_RECENCY_RISK_LEVEL AS LOGIN_RECENCY_RISK_LEVEL COMMENT='Risk categorization based on days since last login',
-		AT_RISK_STUDENTS.MAJOR_CODE AS MAJOR_CODE COMMENT='Academic major code (e.g., ENGR, BUSN, NURS, PSYC)',
-		AT_RISK_STUDENTS.OVERALL_RISK_ASSESSMENT AS OVERALL_RISK_ASSESSMENT COMMENT='Composite risk level with severity classification combining multiple risk factors. Critical and High levels require immediate intervention.',
-		AT_RISK_STUDENTS.RECOMMENDED_ACTION AS RECOMMENDED_ACTION COMMENT='Specific recommended interventions based on student risk profile',
-		AT_RISK_STUDENTS.STUDENT_ID AS STUDENT_ID COMMENT='Unique student identifier (e.g., STU_202400001)'
-	)
-	COMMENT='Student Retention semantic model for analyzing at-risk students. Contains multi-factor risk assessments, academic performance metrics, engagement analytics, financial aid information, and recommended interventions. Used for identifying students requiring support and routing retention alerts to appropriate academic staff.'
-	WITH EXTENSION (CA='{"tables":[{"name":"at_risk_students","dimensions":[{"name":"academic_standing","sample_values":["Dean''s List","Excellent Standing","Good Standing","Satisfactory Progress","Conditional Standing","Academic Warning","Warning Status","Probationary Status","Academic Probation","Academic Suspension"]},{"name":"advisor_id"},{"name":"at_risk_flag"},{"name":"completion_risk_level","sample_values":["Critical","High","Moderate","Low"]},{"name":"engagement_risk_level","sample_values":["Critical","High","Moderate","Low"]},{"name":"enrollment_date"},{"name":"gpa_risk_level","sample_values":["Critical","High","Moderate","Low"]},{"name":"last_login_date"},{"name":"last_updated"},{"name":"login_recency_risk_level","sample_values":["Critical","High","Moderate","Low"]},{"name":"major_code","sample_values":["ENGR","BUSN","NURS","PSYC","COMP","BIOL"]},{"name":"overall_risk_assessment","sample_values":["Critical - Immediate Intervention","High - Priority Attention","Moderate - Monitor Closely","Low - Watch List"]},{"name":"recommended_action"},{"name":"student_id","unique":true}],"facts":[{"name":"assignment_submissions"},{"name":"course_completion_rate"},{"name":"current_gpa"},{"name":"days_since_last_login"},{"name":"discussion_posts"},{"name":"engagement_score"},{"name":"financial_aid_amount"},{"name":"intervention_count"},{"name":"plagiarism_incidents"},{"name":"total_course_views"},{"name":"writing_quality_score"}],"filters":[{"name":"critical_risk_only","description":"Filter to only Critical risk students","expr":"OVERALL_RISK_ASSESSMENT LIKE ''%Critical%''"},{"name":"high_financial_aid","description":"Students receiving $10,000+ in financial aid","expr":"FINANCIAL_AID_AMOUNT >= 10000"},{"name":"high_priority","description":"Filter to Critical and High risk students","expr":"OVERALL_RISK_ASSESSMENT LIKE ''%Critical%'' OR OVERALL_RISK_ASSESSMENT LIKE ''%High%''"},{"name":"inactive_14_days","description":"Students who haven''t logged in for 14+ days","expr":"DAYS_SINCE_LAST_LOGIN >= 14"},{"name":"inactive_21_days","description":"Students who haven''t logged in for 21+ days (critical threshold)","expr":"DAYS_SINCE_LAST_LOGIN >= 21"},{"name":"low_completion","description":"Students with course completion rate below 50%","expr":"COURSE_COMPLETION_RATE < 0.5"},{"name":"low_engagement","description":"Students with engagement score below 40","expr":"ENGAGEMENT_SCORE < 40"},{"name":"low_gpa","description":"Students with GPA below 2.0","expr":"CURRENT_GPA < 2.0"},{"name":"needs_immediate_attention","description":"Students requiring immediate Dean or Chair notification","expr":"OVERALL_RISK_ASSESSMENT LIKE ''%Critical%'' OR (CURRENT_GPA < 2.0) OR (DAYS_SINCE_LAST_LOGIN > 21)"},{"name":"needs_intervention","description":"Students with multiple intervention indicators","expr":"(CURRENT_GPA < 2.0 OR COURSE_COMPLETION_RATE < 0.5 OR DAYS_SINCE_LAST_LOGIN >= 14)"},{"name":"on_probation","description":"Students on academic probation or warning","expr":"ACADEMIC_STANDING IN (''Probationary Status'', ''Academic Probation'', ''Academic Warning'', ''Warning Status'')"}]}]}');
-```
+#### 2.9.6 Reflect
+
+Take a moment to consider what just happened:
+
+- **Run #1** built everything from scratch — this is the full cost of a traditional dbt job on every run, regardless of whether data changed
+- **Run #2** completed in seconds with no compute consumed on transformations or tests — this is the value of Fusion cost optimization
+
+In a real production environment where dbt jobs run on a schedule (hourly, daily), this means you're only paying for warehouse compute when data has actually changed. For large projects with hundreds of models, that's a significant reduction in both cost and job runtime.
 
 ---
 
-### 3.4 Create the Custom Agent Functions
+# Part 3: Agentic Data Pipeline with Cortex Code
 
-> **What are custom functions?** In addition to answering natural language questions, Cortex Agents can be given tools that let them *take action*. These tools are backed by regular Snowflake SQL functions (also called UDFs — User Defined Functions). When the agent decides an action is needed, it calls the function and uses the result to form its response.
+## What is Cortex Code?
 
-In this lab, the agent has two custom tools:
-- **`ROUTE_STUDENT_ALERT`** — Takes a student ID and returns a full alert payload with risk details and routing recommendation (e.g., notify the Dean, Department Chair, or Academic Advisor)
-- **`GET_DAILY_RETENTION_SUMMARY`** — Returns an aggregate summary of all at-risk students for a daily report
+**Cortex Code** is Snowflake's AI-powered coding assistant, available as an extension for VS Code, Cursor, and other compatible local IDEs. It connects to your Snowflake environment and a set of MCP servers, giving it live access to tools — Fivetran, dbt, Snowflake — that it can call on your behalf as part of a guided agentic workflow.
 
-Run each SQL block below in your Snowsight worksheet. Remember to replace `YOUR_DATABASE` with your actual database name.
+## What is an Agent Skill?
 
-#### Create the Route Student Alert function:
+An **agent skill** is a pre-built, conversational workflow that runs end-to-end inside Cortex Code. When you invoke a skill, the agent takes over: it calls the right tools in the right order, shares context along the way, and prompts you only when a decision or confirmation is needed. You stay in your IDE the entire time — no browser tabs, no separate UIs.
 
-```sql
-CREATE OR REPLACE FUNCTION YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.ROUTE_STUDENT_ALERT("STUDENT_ID_INPUT" VARCHAR)
-RETURNS OBJECT
-LANGUAGE SQL
-COMMENT='Prepares a student retention alert payload for routing to academic staff. Returns student risk data with routing recommendation based on severity. Used by Cortex Agent for alert activation.'
-AS '
-SELECT OBJECT_CONSTRUCT(
-    -- Student identification
-    ''student_id'', s.STUDENT_ID,
-    ''major_code'', s.MAJOR_CODE,
-    ''advisor_id'', s.ADVISOR_ID,
-    ''academic_standing'', s.ACADEMIC_STANDING,
+In this section, you'll run the same end-to-end data pipeline you built manually in Parts 1 and 2 — but this time the agent does the work. The pipeline follows Fivetran's full **Open Data Infrastructure** story:
 
-    -- Risk assessment
-    ''overall_risk_assessment'', s.OVERALL_RISK_ASSESSMENT,
-    ''at_risk_flag'', s.AT_RISK_FLAG,
-
-    -- Academic metrics
-    ''current_gpa'', s.CURRENT_GPA,
-    ''gpa_risk_level'', s.GPA_RISK_LEVEL,
-    ''course_completion_rate'', s.COURSE_COMPLETION_RATE,
-    ''completion_risk_level'', s.COMPLETION_RISK_LEVEL,
-
-    -- Engagement metrics
-    ''engagement_score'', s.ENGAGEMENT_SCORE,
-    ''engagement_risk_level'', s.ENGAGEMENT_RISK_LEVEL,
-    ''days_since_last_login'', s.DAYS_SINCE_LAST_LOGIN,
-    ''login_recency_risk_level'', s.LOGIN_RECENCY_RISK_LEVEL,
-
-    -- Activity metrics
-    ''total_course_views'', s.TOTAL_COURSE_VIEWS,
-    ''assignment_submissions'', s.ASSIGNMENT_SUBMISSIONS,
-    ''discussion_posts'', s.DISCUSSION_POSTS,
-
-    -- Financial & intervention
-    ''financial_aid_amount'', s.FINANCIAL_AID_AMOUNT,
-    ''financial_aid_category'', s.FINANCIAL_AID_CATEGORY,
-    ''intervention_count'', s.INTERVENTION_COUNT,
-    ''intervention_category'', s.INTERVENTION_CATEGORY,
-    ''plagiarism_incidents'', s.PLAGIARISM_INCIDENTS,
-    ''writing_quality_score'', s.WRITING_QUALITY_SCORE,
-
-    -- Pre-generated recommendations
-    ''recommended_action'', s.RECOMMENDED_ACTION,
-
-    -- ROUTING DECISION LOGIC
-    ''routing_recommendation'',
-        CASE
-            WHEN s.OVERALL_RISK_ASSESSMENT LIKE ''%Critical%'' THEN ''NOTIFY_DEAN''
-            WHEN s.CURRENT_GPA < 2.0 THEN ''NOTIFY_DEAN''
-            WHEN (s.GPA_RISK_LEVEL = ''Critical'' AND s.COMPLETION_RISK_LEVEL = ''Critical'') THEN ''NOTIFY_DEAN''
-            WHEN (s.GPA_RISK_LEVEL = ''Critical'' AND s.ENGAGEMENT_RISK_LEVEL = ''Critical'') THEN ''NOTIFY_DEAN''
-            WHEN s.OVERALL_RISK_ASSESSMENT LIKE ''%High%'' THEN ''NOTIFY_DEPT_CHAIR''
-            WHEN s.GPA_RISK_LEVEL = ''Critical'' OR s.COMPLETION_RISK_LEVEL = ''Critical'' THEN ''NOTIFY_DEPT_CHAIR''
-            WHEN s.ENGAGEMENT_RISK_LEVEL = ''Critical'' OR s.LOGIN_RECENCY_RISK_LEVEL = ''Critical'' THEN ''NOTIFY_DEPT_CHAIR''
-            WHEN s.DAYS_SINCE_LAST_LOGIN > 21 THEN ''NOTIFY_DEPT_CHAIR''
-            WHEN s.ACADEMIC_STANDING IN (''Probationary Status'', ''Academic Probation'', ''Academic Warning'', ''Warning Status'') THEN ''NOTIFY_DEPT_CHAIR''
-            ELSE ''NOTIFY_ADVISOR''
-        END,
-
-    ''escalation_minutes'',
-        CASE
-            WHEN s.OVERALL_RISK_ASSESSMENT LIKE ''%Critical%'' OR s.CURRENT_GPA < 2.0 THEN 10
-            WHEN s.OVERALL_RISK_ASSESSMENT LIKE ''%High%'' OR s.GPA_RISK_LEVEL = ''Critical'' THEN 15
-            ELSE 30
-        END,
-
-    ''priority_level'',
-        CASE
-            WHEN s.OVERALL_RISK_ASSESSMENT LIKE ''%Critical%'' OR s.CURRENT_GPA < 2.0 THEN ''Critical''
-            WHEN s.OVERALL_RISK_ASSESSMENT LIKE ''%High%'' OR s.GPA_RISK_LEVEL = ''Critical'' THEN ''High''
-            ELSE ''Medium''
-        END,
-
-    ''alert_timestamp'', CURRENT_TIMESTAMP(),
-    ''alert_date'', TO_CHAR(CURRENT_DATE(), ''YYYY-MM-DD''),
-    ''status'', ''ALERT_READY''
-)
-FROM YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.VW_HED_RETENTION_RISK_ANALYSIS s
-WHERE s.STUDENT_ID = student_id_input
-';
-```
-
-#### Test the function with the student ID you saved earlier:
-
-```sql
-SELECT YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.ROUTE_STUDENT_ALERT('YOUR_STUDENT_ID');
-```
-
-> **✅ Expected:** You should see a JSON object with the student's risk details and a routing recommendation.
-
-#### Create the Daily Retention Summary function:
-
-```sql
-CREATE OR REPLACE FUNCTION YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.GET_DAILY_RETENTION_SUMMARY()
-RETURNS TABLE (
-    "REPORT_DATE" VARCHAR,
-    "CRITICAL_RISK_COUNT" NUMBER(38,0),
-    "HIGH_RISK_COUNT" NUMBER(38,0),
-    "MODERATE_RISK_COUNT" NUMBER(38,0),
-    "TOTAL_AT_RISK_STUDENTS" NUMBER(38,0),
-    "AVG_GPA" NUMBER(38,0),
-    "AVG_ENGAGEMENT_SCORE" NUMBER(38,0),
-    "STUDENTS_INACTIVE_7_DAYS" NUMBER(38,0),
-    "STUDENTS_INACTIVE_14_DAYS" NUMBER(38,0),
-    "STUDENTS_INACTIVE_21_DAYS" NUMBER(38,0),
-    "STUDENTS_ON_PROBATION" NUMBER(38,0),
-    "HIGH_INTERVENTION_COUNT" NUMBER(38,0),
-    "UNIQUE_MAJORS" NUMBER(38,0),
-    "TOP_RISK_MAJOR" VARCHAR,
-    "ALERT_MESSAGE" VARCHAR
-)
-LANGUAGE SQL
-COMMENT='Generates a daily summary of at-risk students. Returns counts, metrics, risk indicators, and a pre-formatted summary message.'
-AS '
-SELECT
-    TO_CHAR(CURRENT_DATE(), ''YYYY-MM-DD'') AS REPORT_DATE,
-    COUNT(CASE WHEN OVERALL_RISK_ASSESSMENT LIKE ''%Critical%'' OR CURRENT_GPA < 2.0 THEN 1 END) AS CRITICAL_RISK_COUNT,
-    COUNT(CASE WHEN OVERALL_RISK_ASSESSMENT LIKE ''%High%'' AND CURRENT_GPA >= 2.0 THEN 1 END) AS HIGH_RISK_COUNT,
-    COUNT(CASE WHEN OVERALL_RISK_ASSESSMENT LIKE ''%Moderate%'' THEN 1 END) AS MODERATE_RISK_COUNT,
-    COUNT(*) AS TOTAL_AT_RISK_STUDENTS,
-    ROUND(AVG(CURRENT_GPA), 2) AS AVG_GPA,
-    ROUND(AVG(ENGAGEMENT_SCORE), 0) AS AVG_ENGAGEMENT_SCORE,
-    COUNT(CASE WHEN DAYS_SINCE_LAST_LOGIN >= 7 THEN 1 END) AS STUDENTS_INACTIVE_7_DAYS,
-    COUNT(CASE WHEN DAYS_SINCE_LAST_LOGIN >= 14 THEN 1 END) AS STUDENTS_INACTIVE_14_DAYS,
-    COUNT(CASE WHEN DAYS_SINCE_LAST_LOGIN >= 21 THEN 1 END) AS STUDENTS_INACTIVE_21_DAYS,
-    COUNT(CASE WHEN ACADEMIC_STANDING IN (''Probationary Status'', ''Academic Probation'', ''Academic Warning'', ''Warning Status'') THEN 1 END) AS STUDENTS_ON_PROBATION,
-    COUNT(CASE WHEN INTERVENTION_COUNT >= 5 THEN 1 END) AS HIGH_INTERVENTION_COUNT,
-    COUNT(DISTINCT MAJOR_CODE) AS UNIQUE_MAJORS,
-    (SELECT MAJOR_CODE
-     FROM YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.VW_HED_RETENTION_RISK_ANALYSIS
-     WHERE AT_RISK_FLAG = ''TRUE''
-     GROUP BY MAJOR_CODE
-     ORDER BY COUNT(*) DESC
-     LIMIT 1) AS TOP_RISK_MAJOR,
-    ''Daily summary generated on '' || TO_CHAR(CURRENT_DATE(), ''Month DD, YYYY'') AS ALERT_MESSAGE
-FROM YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.VW_HED_RETENTION_RISK_ANALYSIS
-WHERE AT_RISK_FLAG = ''TRUE''
-';
-```
-
-> **✅ Verify both functions exist:**
-> ```sql
-> SHOW FUNCTIONS LIKE '%HED%' IN SCHEMA YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION;
-> ```
+**Source → Move & Manage → Transform → Agent → Activate**
 
 ---
 
-### 3.5 Create the Cortex Agent
+## Step 3: Run the Agentic Pipeline
 
-Now you'll put it all together by creating the agent in Snowsight. The agent connects the Semantic View (for answering questions) with the custom functions (for taking action) into a single conversational interface.
+### 3.1 Environment Setup
 
-1. In Snowsight, click **AI & ML** in the left navigation panel
-2. Click **Agents** in the submenu
-3. Click **+ Agent** in the top right corner to open the agent builder
+> **Note:** Part 3 runs entirely in a local IDE — VS Code, Cursor, or any equivalent editor with the Cortex Code extension installed. You'll need a working internet connection and the lab credentials provided by your instructor.
 
-#### Set the Agent Identity
+> **⚠️ Unable to run locally?** If your laptop has restrictions that prevent you from completing the local setup, visit the **Fivetran booth** where pre-configured workstations are available to run the demo.
 
-Fill in the following fields:
+#### 3.1.1 Clone the Lab Repository
 
-| Field | Value |
-|---|---|
-| **Agent Name** | `HED_STUDENT_SUCCESS_AGENT_LAB` |
-| **Display Name** | `HED Student Success Agent_Lab` |
-| **Available in Snowflake Intelligence** | Toggle **ON** |
+Open a terminal and clone the lab repo:
 
-**Description** — paste this into the Description field:
-```
-Student retention analytics agent that monitors at-risk students, answers natural language questions about retention risk factors, and routes intelligent alerts to academic staff (Dean, Department Chair, or Academic Advisor). Powered by real-time data from the HED pipeline (Snowflake → dbt → Cortex).
+```bash
+git clone https://github.com/kellykohlleffel/snowflake-summit-2026
+cd snowflake-summit-2026
 ```
 
-#### Add the Orchestration Instructions
+#### 3.1.2 Run the Setup Script
 
-The orchestration instructions tell the agent *how to behave* — which tool to use for which type of request, and any business rules it should follow. Paste the following into the **Orchestration Instructions** (or **System Prompt**) field:
+The setup script checks all prerequisites, builds the required extensions and MCP servers, installs the HOL skill, and creates credential config files. It is safe to re-run if anything fails — it picks up where it left off.
 
-```
-You are a Student Retention agent that helps academic staff identify and respond to at-risk students.
-
-TOOL SELECTION:
-1. For questions about student data, risk scores, academic performance, or statistics → use query_student_risk_data (Cortex Analyst)
-2. For routing an alert for a specific student → use route_student_alert (requires student_id)
-3. For generating a daily summary or report → use get_daily_retention_summary
-
-REASONING PROCESS:
-1. Understand if the user wants information (query) or action (alert/summary)
-2. For queries: Use query_student_risk_data to search student retention data
-3. For alerts: Get the student_id first (ask if not provided), then use route_student_alert
-4. For summaries: Use get_daily_retention_summary
-
-IMPORTANT:
-- Overall risk assessment values: Critical, High, Moderate, Low
-- GPA below 2.0 is critical threshold
-- 21+ days inactive requires immediate intervention
-- Critical risk → routed to Dean (10-min escalation)
-- High risk → routed to Department Chair (15-min escalation)
-- Medium risk → routed to Academic Advisor (30-min escalation)
-- Always include student_id, major, advisor, and risk assessment when discussing students
+```bash
+./setup.sh
 ```
 
-#### Add the Response Instructions
+The script will check for and guide you through any missing prerequisites:
 
-In the **Response Instructions** field, paste:
+- Git
+- Node.js v18+
+- Python 3.12+
+- VS Code `code` command (or equivalent IDE CLI)
+- Cortex Code CLI
+- GitHub CLI (`gh`)
 
-```
-Tone: Professional and supportive, but urgent when discussing critical-risk students. Remember these are real students who need help.
+If any prerequisite is missing, the script will print clear instructions and exit. Fix the issue and re-run `./setup.sh`.
 
-Format:
-- Lead with most important information (risk level, student count, priority)
-- Include specific numbers (GPA, engagement scores, counts)
-- For student details: always show Student ID, Major, Risk Assessment, GPA, Advisor
+> **✅ Expected:** The script completes with a "Setup Complete" summary showing all components installed and both credential files created.
 
-Alert Responses — when routing an alert, confirm:
-- Student ID and major
-- Routing destination (Dean/Department Chair/Academic Advisor)
-- Key risk factors triggering the alert
+#### 3.1.3 Fill In Your Credentials
 
-Never:
-- Skip confirming student_id before routing alerts
-- Provide academic or counseling advice beyond the data
-- Ignore critical risk indicators
-```
+The setup script creates three credential files with placeholder values. Open each file and fill in the values from your lab credentials page.
 
-#### Add the Cortex Analyst Tool
+**File 1: `~/.fivetran-code/config.json`**
 
-This tool connects the agent to your Semantic View so it can answer natural language questions about student data.
-
-1. In the **Tools** section, click **+ Add Tool**
-2. Select **Cortex Analyst** as the tool type
-3. Configure it as follows:
-
-| Field | Value |
-|---|---|
-| **Tool Name** | `query_student_risk_data` |
-| **Database** | Your database name |
-| **Schema** | `INDUSTRIES_HIGHER_EDUCATION` |
-| **Semantic View** | `HED_AT_RISK_STUDENTS` |
-
-**Tool Description** — paste this into the tool description field:
-```
-Query student retention data, risk scores, academic performance, and statistics using natural language. Use this tool to answer questions about at-risk students, filter by major or risk level, calculate aggregate metrics, or analyze retention trends.
+```json
+{
+  "fivetranApiKey": "YOUR_FIVETRAN_API_KEY",
+  "fivetranApiSecret": "YOUR_FIVETRAN_API_SECRET",
+  "anthropicApiKey": "YOUR_ANTHROPIC_API_KEY",
+  "snowflakeAccount": "YOUR_SNOWFLAKE_ACCOUNT",
+  "snowflakePatToken": "YOUR_SNOWFLAKE_PAT_TOKEN"
+}
 ```
 
-#### Add Custom Tool 1: Route Student Alert
+**File 2: `~/.snowflake/connections.toml`**
 
-This tool lets the agent take action by routing an alert for a specific student.
+```toml
+default_connection_name = "summit-hol"
 
-1. Click **+ Add Tool** again
-2. Select **Function** as the tool type
-3. Configure it as follows:
-
-| Field | Value |
-|---|---|
-| **Tool Name** | `route_student_alert` |
-| **Resource Type** | `function` |
-| **Function Reference** | `YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.ROUTE_STUDENT_ALERT(VARCHAR)` |
-
-**Tool Description** — paste this:
-```
-Use this tool to route a retention alert for a specific student. Requires student_id parameter (e.g., STU_202400001). Returns a comprehensive alert payload with student details, risk assessment, academic performance, recommended actions, and routing destination (NOTIFY_DEAN, NOTIFY_CHAIR, or NOTIFY_ADVISOR). Use when the user asks to "route an alert", "send alert", "notify", or "create alert" for a specific student.
+[summit-hol]
+account = "YOUR_SNOWFLAKE_ACCOUNT"
+user = "YOUR_SNOWFLAKE_USER"
+password = "YOUR_SNOWFLAKE_PAT_TOKEN"
+warehouse = "HANDS_ON_LAB_WAREHOUSE"
+database = "YOUR_SNOWFLAKE_DATABASE"
 ```
 
-#### Add Custom Tool 2: Daily Retention Summary
+**File 3: `mcp-servers/se-demo/.env`**
 
-This tool generates a high-level summary across all at-risk students.
+Fill in the Snowflake and Fivetran values listed in the file — these allow the SE Demo MCP server to execute dbt and query Snowflake on your behalf.
 
-1. Click **+ Add Tool** again
-2. Select **Function** as the tool type
-3. Configure it as follows:
+#### 3.1.4 Reload Your IDE
 
-| Field | Value |
-|---|---|
-| **Tool Name** | `get_daily_retention_summary` |
-| **Resource Type** | `table_function` |
-| **Function Reference** | `YOUR_DATABASE.INDUSTRIES_HIGHER_EDUCATION.GET_DAILY_RETENTION_SUMMARY()` |
+Once credentials are filled in, reload your IDE to activate the Cortex Code extension with the new configuration.
 
-**Tool Description** — paste this:
-```
-Use this tool to generate a summary of all at-risk students for daily alerting. Returns counts of critical and high-risk students, total at-risk population, engagement metrics, and an overview of the retention picture. Use when the user asks for a "summary", "daily report", or "overview of at-risk students".
-```
-
-#### Add Example Questions
-
-Example questions help the agent understand what kinds of queries it should expect and help users get started. Add each of these in the **Example Questions** section:
-
-```
-Which students have critical retention risk right now?
-```
-```
-Show me the top 10 highest risk students
-```
-```
-Find Engineering students with low GPA
-```
-```
-What's the average engagement score by major?
-```
-```
-Which students are inactive for more than 21 days?
-```
-```
-Summarize STU_202400465's risk factors
-```
-```
-How many students are on academic probation today?
-```
-```
-Route an alert for STU_202400465
-```
-```
-What's the total financial aid at risk for critical students?
-```
-```
-Generate a daily retention summary
-```
-
-#### Save the Agent
-
-1. Review all settings
-2. Click **Create** (or **Save**) to create the agent
-
-> **✅ You should see your new agent listed under AI & ML → Agents.**
+- **VS Code:** `Cmd+Shift+P → Developer: Reload Window`
+- **Cursor or other:** use the equivalent reload command for your editor
 
 ---
 
-### 3.6 Test Your Agent
+### 3.2 Launch Cortex Code and Start the Skill
 
-Now let's make sure everything works end to end.
+#### 3.2.1 Open Cortex Code
 
-#### Option A: Test in Snowflake Intelligence
+Click the **Snowflake icon** in the activity bar (left sidebar) of your IDE to open the Cortex Code panel.
 
-1. Navigate to [ai.snowflake.com](https://ai.snowflake.com)
-2. Log in using your lab credentials
-3. Find and select **HED Student Success Agent_Lab**
+#### 3.2.2 Verify MCP Servers Are Connected
 
-#### Option B: Test Directly in Snowsight
+In the top right of the Cortex Code panel, the extension displays all connected MCP servers. Confirm you see **[N] MCP servers** connected, including:
 
-1. In Snowsight, go to **AI & ML → Agents**
-2. Click on **HED_STUDENT_SUCCESS_AGENT_LAB**
-3. Click **Test Agent** or **Open Chat**
+- **`se-demo`** — handles Snowflake queries, dbt execution, Cortex Agent creation, and activation
+- **`fivetran-code`** — handles Fivetran connector management, syncs, and schema configuration
 
-#### Try these test queries:
+> *(The exact count and list of MCP servers may be updated before the lab — your instructor will confirm what you should see.)*
 
-**Test 1 — Natural language data query (uses Cortex Analyst):**
-> "Which students have critical retention risk right now?"
+If either server shows as disconnected, check that your credential files are filled in correctly and reload your IDE.
 
-**Test 2 — Filtered query:**
-> "Find Engineering students with low GPA"
+#### 3.2.3 Invoke the Skill
 
-**Test 3 — Alert routing (uses your custom function):**
-> "Route an alert for [YOUR_STUDENT_ID]"
-> *(Use the student ID you saved in Step 2.2)*
+In the Cortex Code chat input, type:
 
-**Test 4 — Aggregate summary:**
-> "Generate a daily retention summary"
+```
+/fivetran-snowflake-hol-sfsummit2026
+```
 
-> **✅ Expected for each test:**
-> - Test 1 & 2: The agent queries the Semantic View and returns student records with risk details
-> - Test 3: The agent calls `ROUTE_STUDENT_ALERT`, returns the student's details, and confirms the routing destination (Dean, Chair, or Advisor)
-> - Test 4: The agent calls `GET_DAILY_RETENTION_SUMMARY` and returns counts and metrics across all at-risk students
+#### 3.2.4 Select an Industry and Follow the Agent
+
+The agent will display the lab roadmap and prompt you to choose an industry. Select whichever industry is most relevant to you and follow the agent's prompts from there — it will guide you through each step of the pipeline.
+
+---
+
+### 3.3 Agent-Guided Pipeline
+
+This portion of the lab is guided by the Cortex agent. The process is outlined below.
+
+**Step 1 — Prerequisites & Readiness Check:** The agent verifies your Snowflake and Fivetran connections, confirms your selected industry and dataset, and collects a schema prefix before proceeding.
+
+**Step 2 — MOVE: Connect the Source:** The agent creates a PostgreSQL connector via the Fivetran API, handling TLS certificate approval, schema discovery, and table selection automatically. If asked to select a Fivetran destination group, choose **`Snowflake_Summit_HOL_27_dbt`**.
+
+**Step 3 — MOVE & MANAGE: Sync to Snowflake:** The agent triggers the sync and shares context about Fivetran's data movement capabilities while the data loads. When prompted, say **"check"** and the agent will verify your data has landed in Snowflake.
+
+**Step 4 — TRANSFORM: Build the dbt Project:** The agent runs `dbt run` and `dbt test` against your Snowflake destination, building the full model stack — staging, mart, and semantic view — and verifying the results.
+
+**Step 5 — AGENT: Create & Deploy the Cortex Agent:** The agent creates a Snowflake Cortex Agent on top of the semantic view, ready to answer natural language questions about your data.
+
+**Step 6 — ASK: Interactive Q&A:** The agent presents a set of sample questions for your chosen industry. Pick from the list or ask your own — this is the fully interactive step of the lab.
+
+**Step 7 — ACTIVATE: Push to Business App:** The agent pushes the top insights from your dataset to a live business app. When prompted, open the activation app link in your browser to see the data appear in real time. The agent will then present a full summary of the end-to-end pipeline: **Move & Manage → Transform → Agent → Activate**.
 
 ---
 
