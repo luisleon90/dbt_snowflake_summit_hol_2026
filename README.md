@@ -44,7 +44,7 @@ Think of Fivetran as the on-ramp to your data platform — it gets raw data flow
 1. In Fivetran, click **+ Connector**
 2. Search for and select **Google Cloud PostgreSQL**
 3. Configure the connector:
-   - **Destination**: `Snowflake_Summit_HOL_dbt` (pre-configured)
+   - **Destination**: `Snowflake_Summit_HOL_27_dbt` (pre-configured)
    - **Snowflake Destination Virtual Warehouse**: Keep default
    - **Destination schema prefix**: `yourfirstname_yourlastname` (lowercase, underscores only)
    - **Destination schema names**: Fivetran naming
