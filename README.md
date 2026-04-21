@@ -305,7 +305,7 @@ In a real production environment where dbt jobs run on a schedule (hourly, daily
 
 An **agent skill** is a pre-built, conversational workflow that runs end-to-end inside Cortex Code. When you invoke a skill, the agent takes over: it calls the right tools in the right order, shares context along the way, and prompts you only when a decision or confirmation is needed. You stay in your IDE the entire time — no browser tabs, no separate UIs.
 
-In this section, you'll run the same end-to-end data pipeline you built manually in Parts 1 and 2 — but this time the agent does the work. The pipeline follows Fivetran's full **Open Data Infrastructure** story:
+In this section, you'll run the same end-to-end data pipeline you built manually in Parts 1 and 2 — but this time the agent does the work. The pipeline follows Fivetran & dbt's full **Open Data Infrastructure** story:
 
 **Source → Move & Manage → Transform → Agent → Activate**
 
