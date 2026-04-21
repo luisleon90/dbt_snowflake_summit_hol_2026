@@ -106,7 +106,7 @@ Where Fivetran handles *moving* raw data into Snowflake, dbt handles *transformi
 
 ## Step 2: Transform Data with dbt
 
-### 2.1 Register for dbt Cloud Workshop Account
+### 2.1 Register for dbt platform Workshop Account
 
 1. Navigate to the dbt Workshop registration page: https://workshops.us1.dbt.com/workshop/
 2. Fill in the registration form:
@@ -118,17 +118,17 @@ Where Fivetran handles *moving* raw data into Snowflake, dbt handles *transformi
 3. Click **Complete Registration** and wait for the success pop-up. It will include generated dbt Platform credentials for the workshop.
 4. Record these credentials — you may need them to log back in during the lab.
 
-### 2.2 Access dbt Platform
+### 2.2 Access dbt platform
 
-1. In dbt Platform, locate the **Project dropdown** on the left-hand side
+1. In dbt platform, locate the **Project dropdown** on the left-hand side
 2. Select **Snowflake Summit (Higher Education)** from the dropdown
 3. Click **Studio** to load dbt Platform
 
 ### 2.3 Build Faster with Fusion
 
-> **What is Fusion?** Fusion is dbt's next-generation execution engine, built directly into dbt Platform Studio. Unlike a traditional SQL editor, Fusion understands the structure of your entire dbt project as you type — it knows which models exist, which columns they contain, and how they relate to each other. This means it can surface errors, preview intermediate results, and provide column-level context *before* you ever run a job.
+> **What is Fusion?** Fusion is dbt's next-generation execution engine, built directly into dbt platform Studio. Unlike a traditional SQL editor, Fusion understands the structure of your entire dbt project as you type — it knows which models exist, which columns they contain, and how they relate to each other. This means it can surface errors, preview intermediate results, and provide column-level context *before* you ever run a job.
 
-This is a great place to get oriented in the dbt Platform Studio IDE before we start building. You'll explore the project structure and see how Fusion makes working in dbt faster and safer than writing SQL in a traditional editor.
+This is a great place to get oriented in the dbt platform Studio IDE before we start building. You'll explore the project structure and see how Fusion makes working in dbt faster and safer than writing SQL in a traditional editor.
 
 #### 2.3.1 Explore IntelliSense
 
@@ -180,7 +180,7 @@ Co-Pilot is dbt's AI assistant, powered by a dbt-native agent that understands y
 
 ### 2.5 Save and Commit Changes
 
-1. Locate the **Git Integration button** in the top-left corner of dbt Platform
+1. Locate the **Git Integration button** in the top-left corner of dbt platform
 2. Click the **Git Integration button** to commit and sync your changes
 3. Follow the prompts to commit your work
 4. Click to open a pull request in GitHub
