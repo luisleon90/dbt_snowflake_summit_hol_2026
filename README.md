@@ -319,10 +319,10 @@ You can interact with it using a preconfigured Cortex Agent in two ways.
 Access Options:
 Option 1: Snowflake Intelligence - ai.snowflake.com
 Option 2: Snowflake Account Direct Access - Log in to your Snowflake account
-Prerequisites:
 
 Use credentials from the lab credentials page for either access method
-3.1 Access the Cortex Agent
+
+#### 3.1 Access the Cortex Agent
 Choose your preferred access method (Snowflake Intelligence or direct Snowflake login)
 Log in using credentials from the lab credentials page
 Locate the HED_STUDENT_SUCCESS_AGENT_LAB agent
