@@ -297,21 +297,22 @@ In a real production environment where dbt jobs run on a schedule (hourly, daily
 ## Step 3: Interact with this Data from Cortex
 Now that dbt has created a clean semantic layer, you'll build an AI agent on top of it. This section walks you through every step of creating the agent from scratch.
 
-What is Snowflake Cortex?
+#### What is Snowflake Cortex?
 Snowflake Cortex is Snowflake's suite of built-in AI and ML capabilities. It runs entirely inside Snowflake — no data leaves the platform, no external APIs are needed. Key components we'll use today:
 
 Cortex Analyst: Lets users ask natural language questions about their data. You point it at a Semantic View and it automatically translates questions like "Which students have critical retention risk?" into SQL and returns results.
 Cortex Agents: Orchestration layer that combines Cortex Analyst with custom functions, giving the AI the ability to both answer questions and take actions (like routing an alert).
 Snowflake Intelligence: A hosted chat interface at ai.snowflake.com where end users can interact with Cortex Agents without writing any code.
-What is a Semantic View?
+
+#### What is a Semantic View?
 A Semantic View is a special Snowflake object that sits on top of your regular data tables or views. It adds a business-friendly layer of meaning — labeling columns, adding descriptions, defining metrics (called "facts"), and categorizing attributes (called "dimensions"). Cortex Analyst reads the Semantic View to understand your data and translate natural language questions into accurate SQL.
 
 Think of it as giving the AI a map of your data: what every column means, what values are valid, and what filters make sense.
 
-What is Snowflake Snowsight?
+#### What is Snowflake Snowsight?
 Snowsight is Snowflake's modern web-based UI. It's where you run SQL, manage objects, and — as of recent releases — create and manage AI Agents. You'll access it using the Snowflake account URL and credentials provided on your lab credentials page.
 
-Agent Details:
+#### Agent Details:
 For information about the agent configuration, see: Snowflake Agent Config Reference
 
 You can interact with it using a preconfigured Cortex Agent in two ways.
