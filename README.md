@@ -328,9 +328,9 @@ Log in using credentials from the lab credentials page
 Locate the HED_STUDENT_SUCCESS_AGENT_LAB agent
 
 #### You can now ask questions about:
-- **-** Student retention
-- **-** At-risk students
-- **-** Suggested action plans
+- **** Student retention
+- **** At-risk students
+- **** Suggested action plans
 
 
 ## Need Help?
