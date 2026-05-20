@@ -295,6 +295,29 @@ In a real production environment where dbt jobs run on a schedule (hourly, daily
 
 ---
 
+Step 3: Analyze Data with Snowflake Cortex
+Now that we've created the Snowflake Semantic View, you can interact with it using a preconfigured Cortex Agent in two ways:
+
+Agent Details:
+For information about the agent configuration, see: Snowflake Agent Config Reference
+
+Access Options:
+
+Option 1: Snowflake Intelligence - ai.snowflake.com
+Option 2: Snowflake Account Direct Access - Log in to your Snowflake account
+Prerequisites:
+
+Use credentials from the lab credentials page for either access method
+3.1 Access the Cortex Agent
+Choose your preferred access method (Snowflake Intelligence or direct Snowflake login)
+Log in using credentials from the lab credentials page
+Locate the HED_STUDENT_SUCCESS_AGENT_LAB agent
+You can now ask questions about:
+Student retention
+At-risk students
+Suggested action plans
+
+
 ## Need Help?
 
 Ask a lab instructor for assistance.
