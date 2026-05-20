@@ -123,55 +123,67 @@ Where Fivetran handles *moving* raw data into Snowflake, dbt handles *transformi
 2. Select **Snowflake Summit (Higher Education)** from the dropdown
 3. Click **Studio** to load dbt Platform
 
-### 2.2b OPTIONAL Local development with dbt Wizard
+### 2.2b OPTIONAL: Local development with dbt Wizard
 
-## What is dbt Wizard?
-dbt Wizard is an AI agent built from the ground up for the way analytics engineers actually work. Not just code generation, but the entire data lifecycle: asking questions, investigating, understanding, changing, validating, and shipping. It's grounded in real dbt project context: lineage, tests, contracts, and defined metrics. And it's available wherever dbt work actually happens, in the dbt platform and in the CLI for those developing locally.
+#### What is dbt Wizard?
 
-⚠️ Note: For reasons of time this lab does not support individuals seting-up dbt Wizard, you are welcome to use dbt Wizard for development but set-up and configuration is at your own risk. If you have issues with set-up please follow the lab flow within dbt platform.
+dbt Wizard is an AI agent built from the ground up for the way analytics engineers actually work. Not just code generation, but the entire data lifecycle: asking questions, investigating, understanding, changing, validating, and shipping. It's grounded in real dbt project context: lineage, tests, contracts, and defined metrics. And it's available wherever dbt work actually happens — in the dbt platform and in the CLI for those developing locally.
 
-Step 2.2b: Set Up dbt Wizard
-2.2b.1 Clone the Lab Project Repo
+> **⚠️ Note:** For reasons of time this lab does not support individuals setting up dbt Wizard. You are welcome to use dbt Wizard for development, but setup and configuration is at your own risk. If you have issues with setup, please follow the lab flow within dbt platform.
 
-Open your terminal
-Clone the lab project repo:
+---
 
-bash   git clone https://github.com/dbt-labs/snowflake_sko_hol_2026.git
+#### 2.2b.1 Clone the lab project repo
 
-Navigate into the project directory:
+1. Open your terminal
+2. Clone the lab project repo:
+```bash
+   git clone https://github.com/dbt-labs/snowflake_sko_hol_2026.git
+```
+3. Navigate into the project directory:
+```bash
+   cd snowflake_sko_hol_2026
+```
 
-bash   cd snowflake_sko_hol_2026
+> **Note:** This is the same project you've been working with in dbt platform — you now have a local copy to use with dbt Wizard.
 
-Note: This is the same project you've been working with in dbt platform — you now have a local copy to use with dbt Wizard.
+---
 
+#### 2.2b.2 Install dbt Wizard
 
-2.2b.2 Install dbt Wizard
+1. In your terminal, run the install command:
+```bash
+   curl -fsSL https://public.staging.cdn.getdbt.com/dbt-wizard/install/install-wizard.sh | sh
+```
 
-In your terminal, run the install command:
+---
 
-bash   curl -fsSL https://public.staging.cdn.getdbt.com/dbt-wizard/install/install-wizard.sh | sh
+#### 2.2b.3 Launch dbt Wizard
 
-2.2b.3 Launch dbt Wizard
+1. From inside the `snowflake_sko_hol_2026` directory, launch dbt Wizard:
+```bash
+   dbt-wizard
+```
 
-From inside the snowflake_sko_hol_2026 directory, launch dbt Wizard:
+---
 
-bash   dbt-wizard
+#### 2.2b.4 Connect your dbt account
 
-2.2b.4 Connect your dbt Account
+> **⚠️ Note:** If you hit issues setting up dbt Wizard but want to try it out, visit the Fivetran Booth #XXXX — pre-configured workstations with dbt Wizard are available so you can try it out!
 
-⚠️ Note: If you hit issues setting up dbt Wizard but want to try it out, visit the Fivetran Booth #XXXX Pre-configured workstations with dbt Wizard are avaliable so you can try it out!
+1. At the welcome screen, press **Enter** to sign in via dbt platform
+2. In the browser window that opens, enter your full name and email, agree to the Acceptable Use Policy, complete the reCAPTCHA, then click **Continue**
+3. Check your inbox for a verification email and click the link to verify your address
+4. Back in the terminal, press **Enter** again when prompted
+5. In the browser, scroll to the bottom and click **Sign in**
+6. Sign in with the dbt platform credentials you just created
+7. Complete the two-factor authentication setup — select **Remember for 30 days** when prompted
 
-- At the welcome screen, press Enter to sign in via dbt platform
-- In the browser window that opens, enter your full name and email, agree to the Acceptable Use Policy, complete the reCAPTCHA, then click Continue
-- Check your inbox for a verification email and click the link to verify your address
-- Back in the terminal, press Enter again when prompted
-- In the browser, scroll to the bottom and click Sign in
-- Sign-in with the credentials to dbt platform that we just created
-- Complete the two-factor authentication setup — select Remember for 30 days when prompted
+---
 
-2.2b.5 Start Using dbt Wizard
+#### 2.2b.5 Start using dbt Wizard
 
-Once 2FA is complete, return to the terminal — dbt Wizard is ready to use
+1. Once 2FA is complete, return to the terminal — dbt Wizard is ready to use 🧙
 
 ### 2.3 Build Faster with Fusion
 
