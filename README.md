@@ -164,7 +164,7 @@ The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in
 dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands your project structure, your models, and how dbt works. You'll use it here to automatically generate and run data quality tests for the `vw_hed_data_quality` model. dbt Wizard is avaliable within dbt platform and for local development via a CLI agent.
 
 1. In the **Project Navigator**, locate and open `vw_hed_data_quality.sql`
-2. Open the **Co-Pilot** panel in dbt Platform Studio
+2. Open the **dbt Wizard** panel in dbt Platform Studio
 3. In the dbt Wizard prompt, type a request such as:
    > *"Generate data quality tests for the vw_hed_data_quality model"*
 4. Review the tests dbt Wizard proposes — it will suggest appropriate checks (e.g., `not_null`, `unique`, `accepted_values`) based on the columns and their types in the model
@@ -248,7 +248,7 @@ The key difference: Snowflake Semantic Views live inside Snowflake and are consu
 2. Click **Settings**, then **Edit**
 3. Locate the **Enable Fusion cost optimization features** toggle and turn it **ON**
 4. Confirm both sub-options are enabled:
-   - ✅ **State-aware orchestration** — dbt will skip models whose inputs haven't changed since the last run
+   - ✅ **dbt State orchestration** — dbt will skip models whose inputs haven't changed since the last run
    - ✅ **Efficient testing** — dbt will skip tests on models that were skipped, avoiding unnecessary test compute
 5. Under **Advanced Settings**, locate the **Compare Changes** setting and set it to **Environment**
 6. In the environment dropdown that appears, select your **Production** environment (the environment you used in Step 2.8) — this tells dbt to compare the current run against the last successful production run when determining what to skip
