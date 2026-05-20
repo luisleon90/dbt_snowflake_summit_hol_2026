@@ -295,7 +295,7 @@ In a real production environment where dbt jobs run on a schedule (hourly, daily
 
 ---
 ## Step 3: Interact with this Data from Cortex
-Now that dbt has created a clean semantic layer in Snowflake, you'll build an AI agent on top of it. This section walks you through every step of creating the agent from scratch.
+Now that dbt has created a clean semantic layer, you'll build an AI agent on top of it. This section walks you through every step of creating the agent from scratch.
 
 What is Snowflake Cortex?
 Snowflake Cortex is Snowflake's suite of built-in AI and ML capabilities. It runs entirely inside Snowflake — no data leaves the platform, no external APIs are needed. Key components we'll use today:
@@ -314,9 +314,7 @@ Snowsight is Snowflake's modern web-based UI. It's where you run SQL, manage obj
 Agent Details:
 For information about the agent configuration, see: Snowflake Agent Config Reference
 
-Step 3: Analyze Data with Snowflake Cortex
-Now that we've created the Snowflake Semantic View, you can interact with it using a preconfigured Cortex Agent in two ways:
-
+You can interact with it using a preconfigured Cortex Agent in two ways.
 Access Options:
 Option 1: Snowflake Intelligence - ai.snowflake.com
 Option 2: Snowflake Account Direct Access - Log in to your Snowflake account
