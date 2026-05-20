@@ -1,6 +1,6 @@
 # dbt Labs | Fivetran | Snowflake Hands-On Lab
 
-Welcome to the dbt Labs Hands-On Lab! In this workshop, you'll move data from a source database into Snowflake using Fivetran, transform it into trusted, production-ready data products using dbt, and see how modern data capabilities like the Fusion engine and State-Aware Orchestration make that process faster, smarter, and more efficient.
+Welcome to the Fivetran & dbt Labs Hands-On Lab! In this workshop, you'll move data from a source database into Snowflake using Fivetran, transform it into trusted, production-ready data products using dbt, and see how modern data capabilities like the Fusion engine and dbt State make that process faster, smarter, and more efficient.
 
 This is a **full-stack, end-to-end walkthrough of how modern data teams go from raw data to AI-powered outcomes** — no prior experience with any of these tools is required.
 
@@ -15,7 +15,7 @@ Before starting the lab, register for your Fivetran account at:
 ## Prerequisites
 
 - Web browser
-- Valid email address (Snowflake, Fivetran, or dbt Labs)
+- Valid email address
 
 ## Getting Started
 
@@ -98,7 +98,7 @@ Where Fivetran handles *moving* raw data into Snowflake, dbt handles *transformi
 **What makes dbt different from just writing SQL?**
 - Every model is a reusable, testable building block
 - Data quality tests run automatically alongside your transformations
-- Lineage is tracked from source to output — you always know where data came from
+- Lineage is tracked from source to output — you always know where data came from and how it is being used
 - Documentation is generated automatically and stays in sync with the code
 - Changes go through version control (Git), just like application software
 
@@ -159,24 +159,24 @@ The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in
 
 > **✅ Expected:** A preview table appears showing the rows produced by that CTE. This is especially useful in a model like `vw_hed_data_quality` where multiple upstream checks feed into a single composite score — you can validate each component independently before running the full build.
 
-### 2.4 Generate Tests with dbt Co-Pilot
+### 2.4 Generate Tests with dbt Wizard
 
-Co-Pilot is dbt's AI assistant, powered by a dbt-native agent that understands your project structure, your models, and how dbt works. You'll use it here to automatically generate and run data quality tests for the `vw_hed_data_quality` model.
+dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands your project structure, your models, and how dbt works. You'll use it here to automatically generate and run data quality tests for the `vw_hed_data_quality` model. dbt Wizard is avaliable within dbt platform and for local development via a CLI agent.
 
 1. In the **Project Navigator**, locate and open `vw_hed_data_quality.sql`
 2. Open the **Co-Pilot** panel in dbt Platform Studio
-3. In the Co-Pilot prompt, type a request such as:
+3. In the dbt Wizard prompt, type a request such as:
    > *"Generate data quality tests for the vw_hed_data_quality model"*
-4. Review the tests Co-Pilot proposes — it will suggest appropriate checks (e.g., `not_null`, `unique`, `accepted_values`) based on the columns and their types in the model
-5. Ask Co-Pilot to write the tests directly to a file by following up with:
+4. Review the tests dbt Wizard proposes — it will suggest appropriate checks (e.g., `not_null`, `unique`, `accepted_values`) based on the columns and their types in the model
+5. Ask dbt Wizard to write the tests directly to a file by following up with:
    > *"Write these tests to the schema YAML file for this model"*
-6. Co-Pilot will create or update the relevant `.yml` file with the test definitions — review the file in the **Project Navigator** to confirm the tests were added correctly
-7. Ask Co-Pilot to run the new tests:
+6. dbt Wizard will create or update the relevant `.yml` file with the test definitions — review the file in the **Project Navigator** to confirm the tests were added correctly
+7. Ask dbt Wizard to run the new tests:
    > *"Run the tests for this model"*
 
-> **Note:** Notice that Co-Pilot runs `dbt test` rather than `dbt build`. The dbt agent powering Co-Pilot understands the difference — `dbt build` would rebuild the model *and* run tests, consuming unnecessary warehouse compute. Since the model already exists and we only want to validate it, `dbt test` is the correct and more efficient command. Co-Pilot makes this call automatically.
+> **Note:** Notice that dbt Wizard runs `dbt test` rather than `dbt build`. Wizard understands the difference — `dbt build` would rebuild the model *and* run tests, consuming unnecessary warehouse compute. Since the model already exists and we only want to validate it, `dbt test` is the correct and more efficient command. Wizard makes this call automatically.
 
-> **✅ Expected:** All generated tests pass, confirming the data in `vw_hed_data_quality` meets the quality rules Co-Pilot defined. Any failures would surface specific rows or columns that don't meet the expected constraints.
+> **✅ Expected:** All generated tests pass, confirming the data in `vw_hed_data_quality` meets the quality rules Wizard defined. Any failures would surface specific rows or columns that don't meet the expected constraints.
 
 ### 2.5 Save and Commit Changes
 
@@ -186,7 +186,7 @@ Co-Pilot is dbt's AI assistant, powered by a dbt-native agent that understands y
 4. Click to open a pull request in GitHub
 5. Review the PR (no need to merge — lab changes won't be merged into the main branch)
 
-**Note:** This step demonstrates the git workflow built into dbt Platform. In a real production environment, all model changes go through a PR review process before being promoted — the same engineering discipline used in software development.
+**Note:** This step demonstrates the git workflow built into dbt platform. In a real production environment, all model changes go through a PR review process before being promoted — the same engineering discipline used in software development.
 
 ### 2.6 Explore dbt Packages Configuration
 
@@ -238,9 +238,9 @@ The key difference: Snowflake Semantic Views live inside Snowflake and are consu
 
 ---
 
-### 2.9 State-Aware Orchestration
+### 2.9 dbt State
 
-> **What is State-Aware Orchestration?** By default, every time a dbt job runs it rebuilds *every* model from scratch — even if the underlying source data hasn't changed. State-Aware Orchestration (SAO) changes this behavior. dbt compares the current state of your source data against the last known state, and skips rebuilding any model whose inputs haven't changed. This means you only pay for warehouse compute on models that actually need to run — and your jobs complete faster.
+> **What is dbt State?** By default, every time a dbt job runs it rebuilds *every* model from scratch — even if the underlying source data hasn't changed. dbt State changes this behavior. dbt compares the current state of your source data against the last known state, and skips rebuilding any model whose inputs haven't changed. This means you only pay for warehouse compute on models that actually need to run — and your jobs complete faster.
 
 #### 2.9.1 Enable Fusion Cost Optimization Features
 
@@ -275,7 +275,7 @@ No new data has been loaded since Run #1 — the Fivetran sync has not run again
 
 When you trigger the job a second time, dbt compares the current state of the source data against the baseline recorded in Run #1. Because nothing has changed, dbt determines there is nothing new to build and **skips every downstream model**. With efficient testing also enabled, tests on skipped models are skipped too — no unnecessary warehouse compute is used at all.
 
-**What you'll see:** All models show `SKIP` status in the run logs. The job completes in seconds rather than minutes.
+**What you'll see:** All models show `SKIP` status in the run logs. The job completes in seconds rather than minutes and with no warehouse compute.
 
 #### 2.9.5 Execute Run #2
 
@@ -292,153 +292,6 @@ Take a moment to consider what just happened:
 - **Run #2** completed in seconds with no compute consumed on transformations or tests — this is the value of Fusion cost optimization
 
 In a real production environment where dbt jobs run on a schedule (hourly, daily), this means you're only paying for warehouse compute when data has actually changed. For large projects with hundreds of models, that's a significant reduction in both cost and job runtime.
-
----
-
-# Part 3: Agentic Data Pipeline with Cortex Code
-
-## What is Cortex Code?
-
-**Cortex Code** is Snowflake's AI-powered coding assistant, available as an extension for VS Code, Cursor, and other compatible local IDEs. It connects to your Snowflake environment and a set of MCP servers, giving it live access to tools — Fivetran, dbt, Snowflake — that it can call on your behalf as part of a guided agentic workflow.
-
-## What is an Agent Skill?
-
-An **agent skill** is a pre-built, conversational workflow that runs end-to-end inside Cortex Code. When you invoke a skill, the agent takes over: it calls the right tools in the right order, shares context along the way, and prompts you only when a decision or confirmation is needed. You stay in your IDE the entire time — no browser tabs, no separate UIs.
-
-In this section, you'll run the same end-to-end data pipeline you built manually in Parts 1 and 2 — but this time the agent does the work. The pipeline follows Fivetran & dbt's full **Open Data Infrastructure** story:
-
-**Source → Move & Manage → Transform → Agent → Activate**
-
----
-
-## Step 3: Run the Agentic Pipeline
-
-### 3.1 Environment Setup
-
-> **Note:** Part 3 runs entirely in a local IDE — VS Code, Cursor, or any equivalent editor with the Cortex Code extension installed. You'll need a working internet connection and the lab credentials provided by your instructor.
-
-> **⚠️ Unable to run locally?** If your laptop has restrictions that prevent you from completing the local setup, visit the **Fivetran booth** where pre-configured workstations are available to run the demo.
-
-#### 3.1.1 Clone the Lab Repository
-
-Open a terminal and clone the lab repo:
-
-```bash
-git clone https://github.com/kellykohlleffel/snowflake-summit-2026
-cd snowflake-summit-2026
-```
-
-#### 3.1.2 Run the Setup Script
-
-The setup script checks all prerequisites, builds the required extensions and MCP servers, installs the HOL skill, and creates credential config files. It is safe to re-run if anything fails — it picks up where it left off.
-
-```bash
-./setup.sh
-```
-
-The script will check for and guide you through any missing prerequisites:
-
-- Git
-- Node.js v18+
-- Python 3.12+
-- VS Code `code` command (or equivalent IDE CLI)
-- Cortex Code CLI
-- GitHub CLI (`gh`)
-
-If any prerequisite is missing, the script will print clear instructions and exit. Fix the issue and re-run `./setup.sh`.
-
-> **✅ Expected:** The script completes with a "Setup Complete" summary showing all components installed and both credential files created.
-
-#### 3.1.3 Fill In Your Credentials
-
-The setup script creates three credential files with placeholder values. Open each file and fill in the values from your lab credentials page.
-
-**File 1: `~/.fivetran-code/config.json`**
-
-```json
-{
-  "fivetranApiKey": "YOUR_FIVETRAN_API_KEY",
-  "fivetranApiSecret": "YOUR_FIVETRAN_API_SECRET",
-  "anthropicApiKey": "YOUR_ANTHROPIC_API_KEY",
-  "snowflakeAccount": "YOUR_SNOWFLAKE_ACCOUNT",
-  "snowflakePatToken": "YOUR_SNOWFLAKE_PAT_TOKEN"
-}
-```
-
-**File 2: `~/.snowflake/connections.toml`**
-
-```toml
-default_connection_name = "summit-hol"
-
-[summit-hol]
-account = "YOUR_SNOWFLAKE_ACCOUNT"
-user = "YOUR_SNOWFLAKE_USER"
-password = "YOUR_SNOWFLAKE_PAT_TOKEN"
-warehouse = "HANDS_ON_LAB_WAREHOUSE"
-database = "YOUR_SNOWFLAKE_DATABASE"
-```
-
-**File 3: `mcp-servers/se-demo/.env`**
-
-Fill in the Snowflake and Fivetran values listed in the file — these allow the SE Demo MCP server to execute dbt and query Snowflake on your behalf.
-
-#### 3.1.4 Reload Your IDE
-
-Once credentials are filled in, reload your IDE to activate the Cortex Code extension with the new configuration.
-
-- **VS Code:** `Cmd+Shift+P → Developer: Reload Window`
-- **Cursor or other:** use the equivalent reload command for your editor
-
----
-
-### 3.2 Launch Cortex Code and Start the Skill
-
-#### 3.2.1 Open Cortex Code
-
-Click the **Snowflake icon** in the activity bar (left sidebar) of your IDE to open the Cortex Code panel.
-
-#### 3.2.2 Verify MCP Servers Are Connected
-
-In the top right of the Cortex Code panel, the extension displays all connected MCP servers. Confirm you see **[N] MCP servers** connected, including:
-
-- **`se-demo`** — handles Snowflake queries, dbt execution, Cortex Agent creation, and activation
-- **`fivetran-code`** — handles Fivetran connector management, syncs, and schema configuration
-
-> *(The exact count and list of MCP servers may be updated before the lab — your instructor will confirm what you should see.)*
-
-If either server shows as disconnected, check that your credential files are filled in correctly and reload your IDE.
-
-#### 3.2.3 Invoke the Skill
-
-In the Cortex Code chat input, type:
-
-```
-/fivetran-snowflake-hol-sfsummit2026
-```
-
-#### 3.2.4 Select an Industry and Follow the Agent
-
-The agent will display the lab roadmap and prompt you to choose an industry. Select whichever industry is most relevant to you and follow the agent's prompts from there — it will guide you through each step of the pipeline.
-
----
-
-### 3.3 Agent-Guided Pipeline
-
-This portion of the lab is guided by the Cortex agent. The process is outlined below.
-
-**Step 1 — Prerequisites & Readiness Check:** The agent verifies your Snowflake and Fivetran connections, confirms your selected industry and dataset, and collects a schema prefix before proceeding.
-
-**Step 2 — MOVE: Connect the Source:** The agent creates a PostgreSQL connector via the Fivetran API, handling TLS certificate approval, schema discovery, and table selection automatically. If asked to select a Fivetran destination group, choose **`Snowflake_Summit_HOL_27_dbt`**.
-
-**Step 3 — MOVE & MANAGE: Sync to Snowflake:** The agent triggers the sync and shares context about Fivetran's data movement capabilities while the data loads. When prompted, say **"check"** and the agent will verify your data has landed in Snowflake.
-
-**Step 4 — TRANSFORM: Build the dbt Project:** The agent runs `dbt run` and `dbt test` against your Snowflake destination, building the full model stack — staging, mart, and semantic view — and verifying the results.
-
-**Step 5 — AGENT: Create & Deploy the Cortex Agent:** The agent creates a Snowflake Cortex Agent on top of the semantic view, ready to answer natural language questions about your data.
-
-**Step 6 — ASK: Interactive Q&A:** The agent presents a set of sample questions for your chosen industry. Pick from the list or ask your own — this is the fully interactive step of the lab.
-
-**Step 7 — ACTIVATE: Push to Business App:** The agent pushes the top insights from your dataset to a live business app. When prompted, open the activation app link in your browser to see the data appear in real time. The agent will then present a full summary of the end-to-end pipeline: **Move & Manage → Transform → Agent → Activate**.
 
 ---
 
