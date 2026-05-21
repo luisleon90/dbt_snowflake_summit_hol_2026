@@ -195,7 +195,7 @@ This is a great place to get oriented in the dbt platform Studio IDE before we s
 
 The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in action. It calculates a composite data quality score for student records by combining multiple upstream checks — making it easy to trace exactly where each component of the score comes from.
 
-1. In the **Project Navigator**, open `vw_hed_data_quality.sql`
+1. In the **Project Navigator**, open `models/hed/marts/vw_hed_data_quality.sql`
 2. In the editor, hover over any column reference used in the composite score calculation — Fusion displays the column's data type and description inline, pulled directly from the upstream model that defines it
 3. Click on a `ref()` call referencing an upstream model — Fusion lets you trace lineage directly, showing you which model and column the data flows from
 4. Begin typing a column name in the editor — notice how Fusion suggests only valid column names from the models referenced in this file, preventing typos before they become errors
