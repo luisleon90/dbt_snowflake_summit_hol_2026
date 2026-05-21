@@ -169,7 +169,7 @@ dbt Wizard is an AI agent built from the ground up for the way analytics enginee
 
 #### 2.2b.4 Connect your dbt account
 
-> **⚠️ Note:** If you hit issues setting up dbt Wizard but want to try it out, visit the Fivetran Booth #2313 — pre-configured workstations with dbt Wizard are available so you can try it out!
+> **⚠️ Note:** If you hit issues setting up dbt Wizard but want to try it out, visit the Fivetran Booth #2313 — pre-configured workstations with dbt Wizard are available!
 
 1. At the welcome screen, press **Enter** to sign in via dbt platform
 2. In the browser window that opens, enter your full name and email, agree to the Acceptable Use Policy, complete the reCAPTCHA, then click **Continue**
