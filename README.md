@@ -77,7 +77,7 @@ Think of Fivetran as the on-ramp to your data platform — it gets raw data flow
 1. Navigate to Snowflake Lab Account using credentials from lab credentials page
 2. Log in with provided credentials
 3. In Snowflake UI, click **Catalog** in the left navigation
-4. Click on **RAW** database
+4. Click on **SNOWFLAKE_SUMMIT_2026_HOL_DB** database
 5. Find your schema (e.g., `yourfirstname_yourlastname_higher_education`)
 6. Click **Tables**
 7. Click on **HED\_RECORDS** table
