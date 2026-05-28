@@ -229,13 +229,7 @@ dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands
 3. In the dbt Wizard prompt, type a request such as:
    > *"Generate data quality tests for the vw_hed_data_quality model"*
 
-> **⚠️ Note:** dbt Wizard not only writes test appropriately, but follows the same validation workflow you would expect of an analytics engineer. Wizard knows to run dbt test versus dbt build for the most efficient use of warehouse compute.
-
-4. dbt Wizard will create or update the relevant `.yml` file with the test definitions — review the file in the **Project Navigator** to confirm the tests were added correctly.
-5. Ask dbt Wizard to run the new tests:
-   > *"Run the tests for this model"*
-
-> **Note:** Notice that dbt Wizard runs `dbt test` rather than `dbt build`. Wizard understands the difference — `dbt build` would rebuild the model *and* run tests, consuming unnecessary warehouse compute. Since the model already exists and we only want to validate it, `dbt test` is the correct and more efficient command. Wizard makes this call automatically.
+> **⚠️ Note:** dbt Wizard not only writes test appropriately, but follows the same validation workflow you would expect of an analytics engineer. Notice that Wizard runs `dbt test` rather than `dbt build`. Wizard understands the difference — `dbt build` would rebuild the model *and* run tests, consuming unnecessary warehouse compute. Since the model already exists and we only want to validate it, `dbt test` is the correct and more efficient command. Wizard makes this call automatically.
 
 > **✅ Expected:** All generated tests pass, confirming the data in `vw_hed_data_quality` meets the quality rules Wizard defined. Any failures would surface specific rows or columns that don't meet the expected constraints.
 
