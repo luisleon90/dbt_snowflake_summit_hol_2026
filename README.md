@@ -185,12 +185,6 @@ dbt Wizard is an AI agent built from the ground up for the way analytics enginee
 
 1. Once 2FA is complete, return to the terminal — dbt Wizard is ready to use 🧙
 
-### 2.3 Build Faster with Fusion
-
-> **What is Fusion?** Fusion is dbt's next-generation execution engine, built directly into dbt platform Studio. Unlike a traditional SQL editor, Fusion understands the structure of your entire dbt project as you type — it knows which models exist, which columns they contain, and how they relate to each other. This means it can surface errors, preview intermediate results, and provide column-level context *before* you ever run a job.
-
-This is a great place to get oriented in the dbt platform Studio IDE before we start building. You'll explore the project structure and see how Fusion makes working in dbt faster and safer than writing SQL in a traditional editor.
-
 ### 2.3 Configure Your Source
 
 > **What are dbt sources?** Sources are how dbt knows where to find your raw data. Instead of hardcoding a table path directly into your SQL, you declare the source once — the database, schema, and table name — and every model that needs it references that declaration. This means if your data ever moves, you update one place and everything downstream stays intact. It also means dbt can test and document your source data the same way it does your models.
