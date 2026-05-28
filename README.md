@@ -394,9 +394,11 @@ In a real production environment where dbt jobs run on a schedule (hourly, daily
 
 ---
 ## Step 3: Interact with this Data from Cortex
+
 Now that dbt has created a clean semantic layer, you'll build an AI agent on top of it. This section walks you through every step of creating the agent from scratch.
 
 #### What is Snowflake Cortex?
+
 Snowflake Cortex is Snowflake's suite of built-in AI and ML capabilities. It runs entirely inside Snowflake — no data leaves the platform, no external APIs are needed. Key components we'll use today:
 
 Cortex Analyst: Lets users ask natural language questions about their data. You point it at a Semantic View and it automatically translates questions like "Which students have critical retention risk?" into SQL and returns results.
@@ -404,29 +406,49 @@ Cortex Agents: Orchestration layer that combines Cortex Analyst with custom func
 Snowflake Intelligence: A hosted chat interface at ai.snowflake.com where end users can interact with Cortex Agents without writing any code.
 
 #### What is a Semantic View?
+
 A Semantic View is a special Snowflake object that sits on top of your regular data tables or views. It adds a business-friendly layer of meaning — labeling columns, adding descriptions, defining metrics (called "facts"), and categorizing attributes (called "dimensions"). Cortex Analyst reads the Semantic View to understand your data and translate natural language questions into accurate SQL.
 
 Think of it as giving the AI a map of your data: what every column means, what values are valid, and what filters make sense.
 
+#### What is the dbt MCP Server?
+
+The dbt MCP Server is an alternative approach to making your semantic definitions available to AI — including Cortex Agents. Instead of defining a Snowflake Semantic View, you expose the dbt Semantic Layer directly through the MCP (Model Context Protocol) standard. Any AI tool that supports MCP can connect to the dbt MCP Server and query your metrics, dimensions, and entities using natural language — with dbt handling the SQL generation and ensuring definitions stay consistent across every consumer.
+
+Snowflake Cortex supports this through its **Cortex Connector** functionality. When a Cortex Agent is configured with a Cortex Connector pointed at the dbt MCP Server, it can answer data questions by querying the dbt Semantic Layer directly — no Snowflake Semantic View required. This means the same metric definitions you govern in dbt become available to Cortex Agents, BI tools, coding assistants like Claude, and any other MCP-compatible AI, all from a single source of truth.
+
+> **Note:** This lab demonstrates both approaches side by side. The `HED_STUDENT_SUCCESS_AGENT_LAB` agent reads from a **Snowflake Semantic View** — the native Snowflake path. The `HED_GENERAL_PURPOSE_AGENT_LAB` agent reads from the **dbt MCP Server** via a Cortex Connector — the dbt-native path. Both agents answer questions about the same underlying data; the difference is where the semantic definitions live and how the agent accesses them.
+
 #### What is Snowflake Snowsight?
+
 Snowsight is Snowflake's modern web-based UI. It's where you run SQL, manage objects, and — as of recent releases — create and manage AI Agents. You'll access it using the Snowflake account URL and credentials provided on your lab credentials page.
 
 #### Agent Details:
+
 For information about the agent configuration, see: Snowflake Agent Config Reference
 
-You can interact with it using a preconfigured Cortex Agent in two ways.
+You can interact with two preconfigured Cortex Agents in this lab, each demonstrating a different approach to semantic integration:
+
+| Agent | Semantic Source | Approach |
+|---|---|---|
+| `HED_STUDENT_SUCCESS_AGENT_LAB` | Snowflake Semantic View | Native Snowflake semantic layer |
+| `HED_GENERAL_PURPOSE_AGENT_LAB` | dbt MCP Server | dbt Semantic Layer via Cortex Connector |
+
 Access Options:
+
 - Option 1: Snowflake Intelligence - ai.snowflake.com
 - Option 2: Snowflake Account Direct Access - Log in to your Snowflake account
 
 Use credentials from the lab credentials page for either access method
 
-#### 3.1 Access the Cortex Agent
+#### 3.1 Access the Cortex Agents
+
 Choose your preferred access method (Snowflake Intelligence or direct Snowflake login)
 Log in using credentials from the lab credentials page
-Locate the HED_STUDENT_SUCCESS_AGENT_LAB agent
+Locate either the `HED_STUDENT_SUCCESS_AGENT_LAB` or `HED_GENERAL_PURPOSE_AGENT_LAB` agent — or try both to compare how each approach responds
 
 #### You can now ask questions about:
+
 - Student retention
 - At-risk students
 - Suggested action plans
