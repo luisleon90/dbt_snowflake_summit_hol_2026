@@ -191,16 +191,50 @@ dbt Wizard is an AI agent built from the ground up for the way analytics enginee
 
 This is a great place to get oriented in the dbt platform Studio IDE before we start building. You'll explore the project structure and see how Fusion makes working in dbt faster and safer than writing SQL in a traditional editor.
 
-#### 2.3.1 Explore IntelliSense
+### 2.3 Configure Your Source
 
-The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in action. It calculates a composite data quality score for student records by combining multiple upstream checks — making it easy to trace exactly where each component of the score comes from.
+> **What are dbt sources?** Sources are how dbt knows where to find your raw data. Instead of hardcoding a table path directly into your SQL, you declare the source once — the database, schema, and table name — and every model that needs it references that declaration. This means if your data ever moves, you update one place and everything downstream stays intact. It also means dbt can test and document your source data the same way it does your models.
+>
+> In this project, the source location is controlled by a variable defined in `dbt_project.yml`. The default value points to the instructor's schema — you'll update it to point to your own Fivetran-synced data.
 
-1. In the **Project Navigator**, open `models/hed/marts/vw_hed_data_quality.sql`
-2. In the editor, hover over any column reference used in the composite score calculation — Fusion displays the column's data type and description inline, pulled directly from the upstream model that defines it
-3. Click on a `ref()` call referencing an upstream model — Fusion lets you trace lineage directly, showing you which model and column the data flows from
-4. Begin typing a column name in the editor — notice how Fusion suggests only valid column names from the models referenced in this file, preventing typos before they become errors
+#### 2.3.1 Open `dbt_project.yml`
 
-> **Note:** This is IntelliSense — the same kind of intelligent code completion used in modern software development tools, now applied to your dbt SQL. Instead of guessing column names or jumping between files, Fusion surfaces the full context of your data model as you write.
+1. In the **Project Navigator**, locate and open `dbt_project.yml` at the root of the project
+2. Find the `vars:` block — it will look like this:
+
+```yaml
+vars:
+  source_schema: 'LUIS_LEON_HIGHER_EDUCATION'
+```
+
+#### 2.3.2 Update the Source Variable
+
+1. Replace `'LUIS_LEON_HIGHER_EDUCATION'` with your own schema name using the format `firstname_lastname_higher_education` — for example:
+
+```yaml
+vars:
+  source_schema: 'jane_doe_higher_education'
+```
+
+2. Save the file
+
+> **Note:** Use lowercase and underscores only. Your schema name should match exactly what you set as the **Destination schema prefix** when you configured your Fivetran connector in Step 1.1.
+
+> **⚠️ Having trouble?** If you run into errors you can't resolve, revert this value back to `'LUIS_LEON_HIGHER_EDUCATION'` to use the instructor's source data and continue the lab without interruption.
+
+#### 2.3.3 Run Your Models
+
+1. In the dbt platform Studio toolbar, run the following command: dbt run
+
+2. Wait for the run to complete
+
+#### 2.3.4 Verify Results in the Run Logs
+
+1. In dbt platform Studio, open the **Run Logs** panel
+2. Confirm that all models completed with a green `OK` or `CREATE TABLE` / `CREATE VIEW` status
+3. Check that the log output references your schema — you should see your `firstname_lastname_higher_education` schema name in the compiled SQL paths, confirming models are now building from your Fivetran-synced data
+
+> **✅ Expected:** All models run successfully and the logs show your personal schema as the source. If you still see `LUIS_LEON_HIGHER_EDUCATION` in the paths, double-check that you saved `dbt_project.yml` and rerun.
 
 ### 2.4 Build Faster with Fusion
 
