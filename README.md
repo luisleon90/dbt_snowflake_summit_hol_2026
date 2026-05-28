@@ -228,11 +228,11 @@ dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands
 2. Open the **dbt Wizard** panel in dbt Platform Studio
 3. In the dbt Wizard prompt, type a request such as:
    > *"Generate data quality tests for the vw_hed_data_quality model"*
-4. Review the tests dbt Wizard proposes — it will suggest appropriate checks (e.g., `not_null`, `unique`, `accepted_values`) based on the columns and their types in the model
-5. Ask dbt Wizard to write the tests directly to a file by following up with:
-   > *"Write these tests to the schema YAML file for this model"*
-6. dbt Wizard will create or update the relevant `.yml` file with the test definitions — review the file in the **Project Navigator** to confirm the tests were added correctly
-7. Ask dbt Wizard to run the new tests:
+
+> **⚠️ Note:** dbt Wizard not only writes test appropriately, but follows the same validation workflow you would expect of an analytics engineer. Wizard knows to run dbt test versus dbt build for the most efficient use of warehouse compute.
+
+4. dbt Wizard will create or update the relevant `.yml` file with the test definitions — review the file in the **Project Navigator** to confirm the tests were added correctly.
+5. Ask dbt Wizard to run the new tests:
    > *"Run the tests for this model"*
 
 > **Note:** Notice that dbt Wizard runs `dbt test` rather than `dbt build`. Wizard understands the difference — `dbt build` would rebuild the model *and* run tests, consuming unnecessary warehouse compute. Since the model already exists and we only want to validate it, `dbt test` is the correct and more efficient command. Wizard makes this call automatically.
