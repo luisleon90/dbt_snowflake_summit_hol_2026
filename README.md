@@ -202,7 +202,24 @@ The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in
 
 > **Note:** This is IntelliSense — the same kind of intelligent code completion used in modern software development tools, now applied to your dbt SQL. Instead of guessing column names or jumping between files, Fusion surfaces the full context of your data model as you write.
 
-#### 2.3.2 See Real-Time Error Detection
+### 2.4 Build Faster with Fusion
+
+> **What is Fusion?** Fusion is dbt's next-generation execution engine, built directly into dbt platform Studio. Unlike a traditional SQL editor, Fusion understands the structure of your entire dbt project as you type — it knows which models exist, which columns they contain, and how they relate to each other. This means it can surface errors, preview intermediate results, and provide column-level context *before* you ever run a job.
+
+This is a great place to get oriented in the dbt platform Studio IDE before we start building. You'll explore the project structure and see how Fusion makes working in dbt faster and safer than writing SQL in a traditional editor.
+
+#### 2.4.1 Explore IntelliSense
+
+The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in action. It calculates a composite data quality score for student records by combining multiple upstream checks — making it easy to trace exactly where each component of the score comes from.
+
+1. In the **Project Navigator**, open `models/hed/marts/vw_hed_data_quality.sql`
+2. In the editor, hover over any column reference used in the composite score calculation — Fusion displays the column's data type and description inline, pulled directly from the upstream model that defines it
+3. Click on a `ref()` call referencing an upstream model — Fusion lets you trace lineage directly, showing you which model and column the data flows from
+4. Begin typing a column name in the editor — notice how Fusion suggests only valid column names from the models referenced in this file, preventing typos before they become errors
+
+> **Note:** This is IntelliSense — the same kind of intelligent code completion used in modern software development tools, now applied to your dbt SQL. Instead of guessing column names or jumping between files, Fusion surfaces the full context of your data model as you write.
+
+#### 2.4.2 See Real-Time Error Detection
 
 1. In `vw_hed_data_quality.sql`, find any line that references an upstream model using `ref()`
 2. Temporarily change the model name to something invalid — add a typo, such as changing `ref('stg_hed_records')` to `ref('stg_hed_recordz')`
@@ -211,7 +228,7 @@ The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in
 
 > **Note:** In a traditional SQL workflow, this error would only surface after a full job run — potentially minutes later, and after consuming warehouse compute. Fusion catches it instantly at the editor level.
 
-#### 2.3.3 Preview a CTE
+#### 2.4.3 Preview a CTE
 
 1. Still in `vw_hed_data_quality.sql`, locate one of the CTEs (the `WITH` blocks at the top of the file)
 2. Click on the CTE name to place your cursor inside it
@@ -220,7 +237,7 @@ The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in
 
 > **✅ Expected:** A preview table appears showing the rows produced by that CTE. This is especially useful in a model like `vw_hed_data_quality` where multiple upstream checks feed into a single composite score — you can validate each component independently before running the full build.
 
-### 2.4 Generate Tests with dbt Wizard (formerly known as Copilot)
+### 2.5 Generate Tests with dbt Wizard (formerly known as Copilot)
 
 dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands your project structure, your models, and how dbt works. You'll use it here to automatically generate and run data quality tests for the `vw_hed_data_quality` model. dbt Wizard is avaliable within dbt platform and for local development via a CLI agent.
 
@@ -233,7 +250,7 @@ dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands
 
 > **✅ Expected:** All generated tests pass, confirming the data in `vw_hed_data_quality` meets the quality rules Wizard defined. Any failures would surface specific rows or columns that don't meet the expected constraints.
 
-### 2.5 Save and Commit Changes
+### 2.6 Save and Commit Changes
 
 1. Locate the **Git Integration button** in the top-left corner of dbt platform
 2. Click the **Git Integration button** to commit and sync your changes
@@ -243,7 +260,7 @@ dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands
 
 **Note:** This step demonstrates the git workflow built into dbt platform. In a real production environment, all model changes go through a PR review process before being promoted — the same engineering discipline used in software development.
 
-### 2.6 Explore dbt Packages Configuration
+### 2.7 Explore dbt Packages Configuration
 
 1. In the **Project Navigator** (left sidebar), locate and open the `packages.yml` file
 2. Review the file contents and note how the `snowflake_semantic_view` package is defined
@@ -256,7 +273,7 @@ dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands
 - This command creates or updates `package-lock.yml`, which records specific package versions
 - The lock file prevents compatibility issues when collaborating with other users
 
-### 2.7 Examine and Run dbt Models
+### 2.8 Examine and Run dbt Models
 
 This project showcases two complementary approaches to defining semantic meaning on top of your data — both supported natively by dbt.
 
@@ -276,7 +293,7 @@ The key difference: Snowflake Semantic Views live inside Snowflake and are consu
 
 > **✅ Expected:** You should see a green success status for `sv_hed_at_risk_students` and its upstream model `vw_hed_retention_risk_analysis`.
 
-### 2.8 Run a Production dbt Job
+### 2.9 Run a Production dbt Job
 
 1. In the left-hand menu, navigate to **Orchestration > Jobs**
 2. Locate and select the preconfigured **Prod Job** (running in the **Prod Environment**)
@@ -292,11 +309,11 @@ The key difference: Snowflake Semantic Views live inside Snowflake and are consu
 
 ---
 
-### 2.9 dbt State
+### 2.10 dbt State
 
 > **What is dbt State?** By default, every time a dbt job runs it rebuilds *every* model from scratch — even if the underlying source data hasn't changed. dbt State changes this behavior. dbt compares the current state of your source data against the last known state, and skips rebuilding any model whose inputs haven't changed. This means you only pay for warehouse compute on models that actually need to run — and your jobs complete faster.
 
-#### 2.9.1 Enable Fusion Cost Optimization Features
+#### 2.10.1 Enable Fusion Cost Optimization Features
 
 1. Navigate to **Orchestration > Jobs** and open the **Prod Job**
 2. Click **Settings**, then **Edit**
@@ -308,13 +325,13 @@ The key difference: Snowflake Semantic Views live inside Snowflake and are consu
 6. In the environment dropdown that appears, select your **Production** environment (the environment you used in Step 2.8) — this tells dbt to compare the current run against the last successful production run when determining what to skip
 7. Click **Save**
 
-#### 2.9.2 What Happens on Run #1
+#### 2.10.2 What Happens on Run #1
 
 This is the first execution with Fusion cost optimization enabled. Because there is no previous production run state to compare against yet, dbt has no baseline — it treats everything as new and builds all models from scratch.
 
 **What you'll see:** All models execute with `CREATE` or `OK` status in the run logs. This is your **baseline run** — dbt records the current state of your data so it can make smart skip decisions on every subsequent run.
 
-#### 2.9.3 Execute Run #1
+#### 2.10.3 Execute Run #1
 
 1. Navigate to the **Prod Job Overview** page
 2. Click **Run Now**
@@ -323,7 +340,7 @@ This is the first execution with Fusion cost optimization enabled. Because there
 
 > **✅ Expected:** All models execute successfully. Note the run time — you'll compare this to Run #2.
 
-#### 2.9.4 What Happens on Run #2
+#### 2.10.4 What Happens on Run #2
 
 No new data has been loaded since Run #1 — the Fivetran sync has not run again, so `hed_records` is unchanged.
 
@@ -331,14 +348,14 @@ When you trigger the job a second time, dbt compares the current state of the so
 
 **What you'll see:** All models show `SKIP` status in the run logs. The job completes in seconds rather than minutes and with no warehouse compute.
 
-#### 2.9.5 Execute Run #2
+#### 2.10.5 Execute Run #2
 
 1. Click **Run Now** again on the **Prod Job Overview** page
 2. Watch the run logs carefully — compare what you see to Run #1
 
 > **✅ Expected:** All models are skipped. The total run time should be a fraction of Run #1's time, and zero Snowflake compute is consumed on model execution or testing.
 
-#### 2.9.6 Reflect
+#### 2.10.6 Reflect
 
 Take a moment to consider what just happened:
 
