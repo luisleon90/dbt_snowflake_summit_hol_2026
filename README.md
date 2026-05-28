@@ -113,7 +113,7 @@ Where Fivetran handles *moving* raw data into Snowflake, dbt handles *transformi
    - **First Name**: Your first name
    - **Last Name**: Your last name
    - **Company Email**: Your email address
-   - **Workshop Selection**: Select **Snowflake Summit Hands-On Lab** from the dropdown
+   - **Workshop Selection**: Select **Getting Your Data Cortex AI-Ready with Fivetran, Snowflake and dbt** from the dropdown
    - **Workshop Passcode**: Enter the passcode provided by your instructor
 3. Click **Complete Registration** and wait for the success pop-up. It will include generated dbt Platform credentials for the workshop.
 4. Record these credentials — you may need them to log back in during the lab.
