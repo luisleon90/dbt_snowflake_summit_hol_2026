@@ -261,19 +261,18 @@ dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands
 This project showcases two complementary approaches to defining semantic meaning on top of your data — both supported natively by dbt.
 
 **Approach 1: Snowflake Semantic Views**
-The `sv_hed_at_risk_students.sql` model creates a Snowflake Semantic View — a native Snowflake object that adds a business-friendly layer directly inside Snowflake. It labels columns, defines metrics (called "facts"), and categorizes attributes (called "dimensions"). This is what powers Cortex AI's ability to understand and query your student retention data using natural language later in the lab.
+The `models/hed/marts/sv_hed_at_risk_students.sql` model creates a Snowflake Semantic View — a native Snowflake object that adds a business-friendly layer directly inside Snowflake. It labels columns, defines metrics (called "facts"), and categorizes attributes (called "dimensions"). This is what powers Cortex AI's ability to understand and query your student retention data using natural language later in the lab.
 
 **Approach 2: dbt Semantic Layer**
-dbt also has its own semantic and metric layer, defined using YAML-based metric files within the project. Open `sem_vw_hed_engagement_analytics.yml` in the **Project Navigator** to see an example — this file defines structured metrics on top of the HED engagement data (things like engagement rates, login activity, and risk distributions) using dbt's MetricFlow framework.
+dbt also has its own semantic and metric layer, defined using YAML-based metric files within the project. Open `models/hed/marts/schema.yml` in the **Project Navigator** to see an example — this file defines structured metrics on top of the HED engagement data (things like engagement rates, login activity, and risk distributions) using dbt's MetricFlow framework.
 
-The key difference: Snowflake Semantic Views live inside Snowflake and are consumed by Snowflake-native tools like Cortex Analyst. dbt Semantic Layer metrics are defined and governed within dbt itself, making them accessible to any downstream tool that connects via the **dbt MCP server** — including AI agents, BI tools, and coding assistants like Claude. When a tool connects to the dbt MCP server, it can query these metrics directly using natural language or structured requests, with dbt handling the SQL generation and ensuring metric definitions stay consistent across every consumer — including Snowflake Cortex Agents, other AI agents, BI tools, and coding assistants like Claude.
+The key difference: Snowflake Semantic Views live inside Snowflake and are consumed by Snowflake-native tools like Cortex Analyst. dbt Semantic Layer metrics are defined and governed within dbt itself, making them accessible to any downstream tool that connects via the **dbt MCP server** — including AI agents, BI tools, and coding assistants like Claude and Cortex. When a tool connects to the dbt MCP server, it can query these metrics directly using natural language or structured requests, with dbt handling the SQL generation and ensuring metric definitions stay consistent across every consumer — including Snowflake Cortex Agents, other AI agents, BI tools, and coding assistants like Claude.
 
 1. In the **Project Navigator**, expand the `models` folder
 2. Expand the `HED` subfolder, then expand the `semantic_models` subfolder inside it
 3. Open `sv_hed_at_risk_students.sql` and review the Snowflake Semantic View definition
-4. Open `sem_vw_hed_engagement_analytics.yml` and review the dbt metric definitions alongside it — note how the two approaches complement each other within the same project
-5. Select `sv_hed_at_risk_students.sql` and click the **Run +model (Upstream)** button to build the semantic view and its upstream dependencies in your local Dev schema
-6. Wait for the model to complete successfully
+4. Select `sv_hed_at_risk_students.sql` and click the **Run +model (Upstream)** button to build the semantic view and its upstream dependencies in your local Dev schema
+5. Wait for the model to complete successfully
 
 > **✅ Expected:** You should see a green success status for `sv_hed_at_risk_students` and its upstream model `vw_hed_retention_risk_analysis`.
 
