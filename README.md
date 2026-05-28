@@ -220,7 +220,7 @@ The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in
 
 > **✅ Expected:** A preview table appears showing the rows produced by that CTE. This is especially useful in a model like `vw_hed_data_quality` where multiple upstream checks feed into a single composite score — you can validate each component independently before running the full build.
 
-### 2.4 Generate Tests with dbt Wizard
+### 2.4 Generate Tests with dbt Wizard (formerly known as Copilot)
 
 dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands your project structure, your models, and how dbt works. You'll use it here to automatically generate and run data quality tests for the `vw_hed_data_quality` model. dbt Wizard is avaliable within dbt platform and for local development via a CLI agent.
 
