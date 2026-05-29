@@ -118,7 +118,7 @@ Where Fivetran handles *moving* raw data into Snowflake, dbt handles *transformi
 3. Click **Complete Registration** and wait for the success pop-up. It will include generated dbt Platform credentials for the workshop.
 4. Record these credentials — you may need them to log back in during the lab.
 
-### 2.2a RECOMENDED PATH Access dbt platform
+### 2.2a RECOMMENDED PATH Access dbt platform
 1. In dbt platform, locate the **Project dropdown** on the left-hand side
 2. Select **Snowflake Summit (Higher Education)** from the dropdown
 3. Click **Studio** to load dbt Platform
@@ -267,14 +267,14 @@ The `vw_hed_data_quality` model is a great place to see Fusion's IntelliSense in
 
 ### 2.5 Generate Tests with dbt Wizard (formerly known as Copilot)
 
-dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands your project structure, your models, and how dbt works. You'll use it here to automatically generate and run data quality tests for the `vw_hed_data_quality` model. dbt Wizard is avaliable within dbt platform and for local development via a CLI agent.
+dbt Wizard is dbt's AI assistant, powered by a dbt-native agent that understands your project structure, your models, and how dbt works. You'll use it here to automatically generate and run data quality tests for the `vw_hed_data_quality` model. dbt Wizard is available within dbt platform and for local development via a CLI agent.
 
 1. In the **Project Navigator**, locate and open `vw_hed_data_quality.sql`
 2. Open the **dbt Wizard** panel in dbt Platform Studio
 3. In the dbt Wizard prompt, type a request such as:
    > *"Generate data quality tests for the vw_hed_data_quality model"*
 
-> **⚠️ Note:** dbt Wizard not only writes test appropriately, but follows the same validation workflow you would expect of an analytics engineer. Notice that Wizard runs `dbt test` rather than `dbt build`. Wizard understands the difference — `dbt build` would rebuild the model *and* run tests, consuming unnecessary warehouse compute. Since the model already exists and we only want to validate it, `dbt test` is the correct and more efficient command. Wizard makes this call automatically.
+> **⚠️ Note:** dbt Wizard not only writes tests appropriately, but follows the same validation workflow you would expect of an analytics engineer. Notice that Wizard runs `dbt test` rather than `dbt build`. Wizard understands the difference — `dbt build` would rebuild the model *and* run tests, consuming unnecessary warehouse compute. Since the model already exists and we only want to validate it, `dbt test` is the correct and more efficient command. Wizard makes this call automatically.
 
 > **✅ Expected:** All generated tests pass, confirming the data in `vw_hed_data_quality` meets the quality rules Wizard defined. Any failures would surface specific rows or columns that don't meet the expected constraints.
 
